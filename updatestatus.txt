@@ -1,0 +1,26 @@
+// 多載的討論
+
+
+int round = 1;  // 回合計次，初始為第一回合
+
+public void roundEnd() {
+	System.out.println("第"+round+"回合戰況");
+	if (move=="1"){
+		System.out.println("我方攻擊"+user.getAttack()+"點傷害\n");
+		ultCounter -= 1 ;
+}	
+	if (move=="2"){
+		System.out.println("我方回復"+user.getHP()+"點血量\n");
+}
+	System.out.println("敵方攻擊"+badGuy.getAttack()+"點傷害");
+	user.beAttack(badGuy.getAttack());
+	badGuy.beAttack(user.getAttack());
+	System.out.println("我方剩餘血量"+user.getHP+"管\n敵方剩餘血量"+badGuy.getHP);
+	System.out.println("再"+ultCounter+"次攻擊後會釋放大招");
+	System.out.println("------------------------------"); // 30個斜線
+}
+
+
+// getAttack(), getHP() >> 可以被取用
+// show_info (角色資訊)
+// 選角色的同時可以查看角色資訊

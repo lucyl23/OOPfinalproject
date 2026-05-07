@@ -68,7 +68,8 @@ class Boss extends Character{
     }
 }
 
-public class buildClass {
+// 檔案名稱：FIGHT
+public class FIGHT {
     public static void main(String[] args){
         //使用者選擇角色
         System.out.println("角色列表 \n A 爆豪勝己 / B 成步堂龍一 百戰百勝 / C 宮野真守 殘念王子系之心中神 \n 請輸入代碼選擇角色");

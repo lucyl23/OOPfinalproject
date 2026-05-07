@@ -1,2 +1,3 @@
-# OOPfinalproject
-This is for OOP final project
+# 第___組物件導向期末專題
+
+老師好，我們是第___組，組員有以下成員/n

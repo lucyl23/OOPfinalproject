@@ -81,14 +81,29 @@ class Boss extends Character{
     }
 }
 
-public void fighting(){
+public void fighting(Character badGuy, int ATK, int ultCounter){
+    //決定這次攻擊是不是大招
+    String useUlt = null;
+    if (ultCounter == 0){
+        useUlt = "Yes";
+    }
+    else{
+        useUlt = "No";
+    }
     //玩家回合開始
-    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n 請輸入行動編號進行動作呀呼");
+    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n 1 攻擊 2 回血 \n 請輸入行動編號進行動作呀呼");
     Scanner scn = new Scanner(System.in);
     String move = scn.next();
+    if(move == "1"){
+            badGuy.beAttact(useUlt);
+    }
+    if(move=="2"){
+
+    }
 
     //badGuy回合開始
     System.out.println("戦え");
+    
 
 }
 
@@ -118,10 +133,14 @@ public class FIGHT {
         }
 
         //戰鬥開始
-        System.out.println("　你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！");
-        System.out.println("艾連葉卡：敬告所有尤米爾的子民，\n我的名字是艾連葉卡，正透過始祖巨人的力量與所有尤米爾的子民對話。\n帕拉迪島上所有用以打造高牆的硬質化已解除，埋藏其中的所有巨人已經開始行動。\n我的目的是保護我成長的帕拉迪島上的人，但世界不僅希望消滅帕拉迪島上的人，更渴望將所有尤米爾子民趕盡殺絕。\n我拒絕接受他們的期望，城牆裡的巨人將會踏遍這座島以外的大地，直到將所有生命都從這世上驅除殆盡");
+        System.out.println("玩家：\n你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！");
+        System.out.println("艾連葉卡：\n敬告所有尤米爾的子民，\n我的名字是艾連葉卡，正透過始祖巨人的力量與所有尤米爾的子民對話。\n帕拉迪島上所有用以打造高牆的硬質化已解除，埋藏其中的所有巨人已經開始行動。\n我的目的是保護我成長的帕拉迪島上的人，但世界不僅希望消滅帕拉迪島上的人，更渴望將所有尤米爾子民趕盡殺絕。\n我拒絕接受他們的期望，城牆裡的巨人將會踏遍這座島以外的大地，直到將所有生命都從這世上驅除殆盡");
+        System.out.println("：開始戰鬥吧！");
+        System.out.println("==============================");
 
+        //回合中
         roundEnd();
-        
+
+        //戰鬥結束
     }
 }

@@ -16,6 +16,10 @@ class Character{
         this.HP = hp;
     }
 
+    void setATK(int ATK){
+        this.ATK = ATK;
+    }
+
     void beAttack(int ATK){
     }
 
@@ -38,14 +42,17 @@ class Character{
 }
 
 class Friend extends Character{
+    private int luck;
     private int healTimes = 2;
     private int ultCounter;
     private final int fullUltCounter;
-    Friend(String name, int HP, int ATK, int UltATK, int healTimes, int ultCounter){
+    private int powerPoints;
+    Friend(String name, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints){
         super(name, HP, ATK, UltATK);
         this.healTimes = healTimes;
         this.ultCounter = ultCounter;
         this.fullUltCounter = ultCounter;
+        this.powerPoints = powerPoints;
     }
     
     @Override
@@ -78,6 +85,18 @@ class Friend extends Character{
     void resetUltCounter(){
         this.ultCounter = fullUltCounter;
     }
+
+    void setLuck(int luck){
+        this.luck = luck;
+    }
+
+    int getLuck(){
+        return this.luck;
+    }
+
+    int getPowerPoints(){
+        return this.powerPoints;
+    }
 }
 
 class Boss extends Character{
@@ -105,7 +124,7 @@ class Boss extends Character{
 }
 
 public class FIGHT {
-    public static String fighting(Boss badGuy, Friend user, Scanner scn){
+    public static void fighting(Boss badGuy, Friend user, Scanner scn){
     //玩家回合開始
     //使用者輸入
     System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n 1 攻擊 2 回血 \n 請輸入行動編號進行動作呀呼");
@@ -113,9 +132,9 @@ public class FIGHT {
 
     //判斷行動跟多載
     if(move.equals("1")){
-        //決定這次攻擊是不是大招
         String useUlt = "Yes";
-        if (user.getUltCounter() == 0){ //放大招
+
+        if (user.getUltCounter() == 0){ //這次攻擊是大招
             badGuy.beAttack(useUlt, user.getUltATK());
             user.resetUltCounter();
 
@@ -131,10 +150,14 @@ public class FIGHT {
 					System.out.println("沒錯，我就是kira。\n");
 					break;
 			}
-
             System.out.println("我方攻擊" + user.getUltATK() + "點傷害");
         }
         else{
+            double critChance = user.getLuck()/1000; //這邊除1000讓下面*10讓數字比較好看
+            if(Math.random() < critChance){ //有爆擊
+                long critATK = Math.round(user.getAttack()*1.5); //round的回傳型態是long
+                badGuy.beAttack((int)critATK*10); //強制轉型
+            }
             badGuy.beAttack(user.getAttack());
             user.cutUltCounter();
             System.out.println("我方攻擊" + user.getAttack() + "點傷害");
@@ -155,35 +178,37 @@ public class FIGHT {
     user.beAttack(badGuy.getAttack());
     System.out.println("艾連：塔塔開欸");
     System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
-    
-    return move; //roundEnd要move
 }
 
-public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
+public static void roundEnd(int round, Boss badGuy, Friend user) {
 	System.out.println("第" + round + "回合戰況");
 	System.out.println("我方剩餘血量" + user.getHP() + "管\n敵方剩餘血量" + badGuy.getHP() + "管");
 	System.out.println("------------------------------"); // 30個斜線
 }
     public static void main(String[] args){
-        
         //建立物件
         Friend[] friendList;
         friendList = new Friend[3];
-        friendList[0] = new Friend("爆豪勝己", 130, 30,80, 5, 4);
-        friendList[1] = new Friend("成步堂龍一", 150, 40,60, 4, 3);
-        friendList[2] = new Friend("宮野真守", 200, 20, 60, 2, 2);
-
-        Boss[] bossList;
-        bossList = new Boss[3];
-        bossList[0] = new Boss("艾連葉卡", 500, 40, 0, 1);
-        bossList[1] = new Boss("艾連葉卡", 500, 40, 0, 1);
-        bossList[2] = new Boss("艾連葉卡", 500, 40, 0, 1);
+        friendList[0] = new Friend("爆豪勝己", 130, 30, 80, 0, 5, 4, 100);
+        friendList[1] = new Friend("成步堂龍一", 150, 40, 60, 0, 4, 3, 100);
+        friendList[2] = new Friend("宮野真守", 200, 20, 60, 0, 2, 2, 100);    
 
         //使用者選擇角色與對戰對象
         Scanner scn = new Scanner(System.in);
         System.out.println("角色列表 \n 1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神 \n 請輸入編號選擇夥伴！");
         int chooseFriend = scn.nextInt();
         Friend user = friendList[chooseFriend-1];
+        System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避），你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
+        //這邊可以加上下限限制的if-else
+        int plusATK = scn.nextInt();
+        user.setLuck(user.getPowerPoints() - plusATK);
+        user.setATK(user.getAttack() + plusATK);
+
+        Boss[] bossList;
+        bossList = new Boss[3];
+        bossList[0] = new Boss("艾連葉卡", 500, 40, 0, 1);
+        bossList[1] = new Boss("艾連葉卡", 500, 40, 0, 1);
+        bossList[2] = new Boss("艾連葉卡", 500, 40, 0, 1);
 
         System.out.println("角色列表 \n 1 艾連葉卡 / 2 艾連葉卡 / 3 艾連葉卡 \n 請輸入編號選擇攻略魔王！");
         int chooseBoss = scn.nextInt();
@@ -200,8 +225,8 @@ public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
         int round = 1;  // 回合計次，初始為第一回合
         while(true){
             if(user.getHP()>0 && badGuy.getHP()>0){
-                String move = fighting(badGuy, user, scn);
-                roundEnd(round, badGuy, user, move);
+                fighting(badGuy, user, scn);
+                roundEnd(round, badGuy, user);
             }
             else if(user.getHP()>0 && badGuy.getHP()<=0){
                 System.out.println("你贏啦太強啦");
@@ -216,6 +241,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
         }
 
         //戰鬥結束
+        System.out.println();
         //這邊感覺是說點話就好
         scn.close();
     }

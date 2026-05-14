@@ -32,6 +32,9 @@ class Character{
         return this.ATK;
     }
     
+    int getUltATK(){
+        return UltATK;
+    }
 }
 
 class Friend extends Character{
@@ -45,7 +48,6 @@ class Friend extends Character{
         this.fullUltCounter = ultCounter;
     }
     
-
     @Override
     void beAttack(int ATK){
         this.setHP(this.getHP() - ATK);
@@ -61,7 +63,7 @@ class Friend extends Character{
     }
 
     void heal(){
-        this.setHP(this.getHP() + 40);
+        this.setHP(this.getHP() + 70);
         this.healTimes -= 1;
     }
 
@@ -76,7 +78,6 @@ class Friend extends Character{
     void resetUltCounter(){
         this.ultCounter = fullUltCounter;
     }
-
 }
 
 class Boss extends Character{
@@ -114,18 +115,21 @@ public class FIGHT {
     if(move.equals("1")){
         //決定這次攻擊是不是大招
         String useUlt = "Yes";
-        if (user.getUltCounter() == 0){
+        if (user.getUltCounter() == 0){ //放大招
             badGuy.beAttack(useUlt);
             user.resetUltCounter();
+            System.out.println("我方攻擊" + user.getUltATK() + "點傷害");
         }
         else{
             badGuy.beAttack(user.getAttack());
             user.cutUltCounter();
+            System.out.println("我方攻擊" + user.getAttack() + "點傷害");
         }
     }
     if(move.equals("2")){
         if(user.getHealTimes()>0){
             user.heal();
+            System.out.println("我方回復70點血量");
         }
         else{
             System.out.println("你的靈魂瓶已用完，你怎麼忘記了，下去。");
@@ -134,20 +138,14 @@ public class FIGHT {
 
     //badGuy回合開始
     user.beAttack(badGuy.getAttack());
-    System.out.println("塔塔開欸");
+    System.out.println("艾連：塔塔開欸");
+    System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
     
     return move; //roundEnd要move
 }
 
 public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
 	System.out.println("第" + round + "回合戰況");
-	if (move.equals("1")){
-		System.out.println("我方攻擊" + user.getAttack() + "點傷害"); //放大招的回合不是攻擊力 覺得可以改成fighting()回傳兩個 一個是move一個是攻擊的值?
-    }	
-	if (move.equals("2")){
-		System.out.println("我方回復40點血量");
-    }
-	System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
 	System.out.println("我方剩餘血量" + user.getHP() + "管\n敵方剩餘血量" + badGuy.getHP() + "管");
 	System.out.println("再" + user.getUltCounter() + "次攻擊後會釋放大招");
 	System.out.println("------------------------------"); // 30個斜線
@@ -157,25 +155,25 @@ public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
         //建立物件
         Friend[] friendList;
         friendList = new Friend[3];
-        friendList[1] = new Friend("爆豪勝己", 130, 30,80, 5, 4);
-        friendList[2] = new Friend("成步堂龍一", 150, 40,60, 4, 3);
-        friendList[3] = new Friend("宮野真守", 200, 20, 60, 2, 2);
+        friendList[0] = new Friend("爆豪勝己", 130, 30,80, 5, 4);
+        friendList[1] = new Friend("成步堂龍一", 150, 40,60, 4, 3);
+        friendList[2] = new Friend("宮野真守", 200, 20, 60, 2, 2);
 
         Boss[] bossList;
         bossList = new Boss[3];
+        bossList[0] = new Boss("艾連葉卡", 500, 40, 0, 1);
         bossList[1] = new Boss("艾連葉卡", 500, 40, 0, 1);
         bossList[2] = new Boss("艾連葉卡", 500, 40, 0, 1);
-        bossList[3] = new Boss("艾連葉卡", 500, 40, 0, 1);
 
         //使用者選擇角色與對戰對象
         Scanner scn = new Scanner(System.in);
         System.out.println("角色列表 \n 1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神 \n 請輸入編號選擇夥伴！");
         int chooseFriend = scn.nextInt();
-        Friend user = friendList[chooseFriend];
+        Friend user = friendList[chooseFriend-1];
 
         System.out.println("角色列表 \n 1 艾連葉卡 / 2 艾連葉卡 / 3 艾連葉卡 \n 請輸入編號選擇攻略魔王！");
         int chooseBoss = scn.nextInt();
-        Boss badGuy = bossList[chooseBoss];
+        Boss badGuy = bossList[chooseBoss-1];
 
         //戰鬥開始
         System.out.println("玩家：\n你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！\n");

@@ -19,7 +19,7 @@ class Character{
     void beAttack(int ATK){
     }
 
-    void beAttack(String ult){
+    void beAttack(String ult, int ultATK){
     }
 
     String getName(){
@@ -54,8 +54,8 @@ class Friend extends Character{
     }
 
     @Override
-    void beAttack(String ult){
-        this.setHP(this.getHP() - 50);
+    void beAttack(String ult, int ultATK){
+        this.setHP(this.getHP() - ultATK);
     }
 
     int getHealTimes(){
@@ -94,8 +94,8 @@ class Boss extends Character{
     }
 
     @Override
-    void beAttack(String ult){
-        this.setHP(this.getHP() - 50);
+    void beAttack(String ult, int ultATK){
+        this.setHP(this.getHP() - ultATK);
     }
 
     void fullyRecovered(){
@@ -116,7 +116,7 @@ public class FIGHT {
         //決定這次攻擊是不是大招
         String useUlt = "Yes";
         if (user.getUltCounter() == 0){ //放大招
-            badGuy.beAttack(useUlt);
+            badGuy.beAttack(useUlt, user.getUltATK());
             user.resetUltCounter();
 
             System.out.println("釋放大招！！！！！！！\n");       // 每個角色自己的大招台詞
@@ -138,6 +138,7 @@ public class FIGHT {
             badGuy.beAttack(user.getAttack());
             user.cutUltCounter();
             System.out.println("我方攻擊" + user.getAttack() + "點傷害");
+            System.out.println("再" + user.getUltCounter() + "次攻擊後會釋放大招");
         }
     }
     if(move.equals("2")){
@@ -161,7 +162,6 @@ public class FIGHT {
 public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
 	System.out.println("第" + round + "回合戰況");
 	System.out.println("我方剩餘血量" + user.getHP() + "管\n敵方剩餘血量" + badGuy.getHP() + "管");
-	System.out.println("再" + user.getUltCounter() + "次攻擊後會釋放大招");
 	System.out.println("------------------------------"); // 30個斜線
 }
     public static void main(String[] args){

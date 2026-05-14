@@ -1,15 +1,19 @@
 import java.util.Scanner;
 class Character{
-    protected String name;
-    protected int HP;
-    protected int ATK;
-    protected int UltATK;
+    private String name;
+    private int HP;
+    private int ATK;
+    private int UltATK;
 
     Character(String name, int HP, int ATK, int UltATK){
         this.name = name;
         this.HP = HP;
         this.ATK = ATK;
         this.UltATK = UltATK;
+    }
+
+    void setHP(int hp){
+        this.HP = hp;
     }
 
     void beAttack(int ATK){
@@ -31,9 +35,9 @@ class Character{
 }
 
 class Friend extends Character{
-    protected int healTimes = 2;
-    protected int ultCounter;
-    protected final int fullUltCounter;
+    private int healTimes = 2;
+    private int ultCounter;
+    private final int fullUltCounter;
     Friend(String name, int HP, int ATK, int UltATK, int healTimes, int ultCounter){
         super(name, HP, ATK, UltATK);
         this.healTimes = healTimes;
@@ -44,16 +48,20 @@ class Friend extends Character{
 
     @Override
     void beAttack(int ATK){
-        this.HP -= ATK;
+        this.setHP(this.getHP() - ATK);
     }
 
     @Override
     void beAttack(String ult){
-        this.HP -= 50;
+        this.setHP(this.getHP() - 50);
+    }
+
+    int getHealTimes(){
+        return this.healTimes;
     }
 
     void heal(){
-        this.HP += 40;
+        this.setHP(this.getHP() + 40);
         this.healTimes -= 1;
     }
 
@@ -72,7 +80,7 @@ class Friend extends Character{
 }
 
 class Boss extends Character{
-    protected int fullyRecoveredTimes = 1;
+    private int fullyRecoveredTimes = 1;
 
     Boss(String name, int HP, int ATK, int UltATK, int fullyRecoveredTimes){
         super(name, HP, ATK, UltATK);
@@ -81,17 +89,17 @@ class Boss extends Character{
 
     @Override
     void beAttack(int ATK){
-        this.HP -= ATK;
+        this.setHP(this.getHP() - ATK);
     }
 
     @Override
     void beAttack(String ult){
-        this.HP -= 50;
+        this.setHP(this.getHP() - 50);
     }
 
     void fullyRecovered(){
         fullyRecoveredTimes -= 1;
-        this.HP = 500;
+        this.setHP(500);
     }
 }
 
@@ -116,7 +124,7 @@ public class FIGHT {
         }
     }
     if(move.equals("2")){
-        if(user.healTimes>0){
+        if(user.getHealTimes()>0){
             user.heal();
         }
         else{
@@ -145,28 +153,29 @@ public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
 	System.out.println("------------------------------"); // 30個斜線
 }
     public static void main(String[] args){
-        //使用者選擇角色
-        System.out.println("角色列表 \n A 爆豪勝己 大・爆・殺・神 Dynamight / B 成步堂龍一 百戰百勝 / C 宮野真守 殘念王子系之心中神 \n 請輸入編號選擇夥伴！");
-        Scanner scn = new Scanner(System.in);
-        String chooceCharacter = scn.next();
-
-        //建立物件
-        Boss badGuy = new Boss("艾連葉卡", 500, 40, 0, 1);
         
-        Friend user = null;
-        switch (chooceCharacter){
-            case "A":
-                user = new Friend("爆豪勝己", 130, 30,80, 5, 4);
-                break;
+        //建立物件
+        Friend[] friendList;
+        friendList = new Friend[3];
+        friendList[1] = new Friend("爆豪勝己", 130, 30,80, 5, 4);
+        friendList[2] = new Friend("成步堂龍一", 150, 40,60, 4, 3);
+        friendList[3] = new Friend("宮野真守", 200, 20, 60, 2, 2);
 
-            case "B":
-                user = new Friend("成步堂龍一", 150, 40,60, 4, 3);
-                break;
+        Boss[] bossList;
+        bossList = new Boss[3];
+        bossList[1] = new Boss("艾連葉卡", 500, 40, 0, 1);
+        bossList[2] = new Boss("艾連葉卡", 500, 40, 0, 1);
+        bossList[3] = new Boss("艾連葉卡", 500, 40, 0, 1);
 
-            case "C":
-                user = new Friend("宮野真守", 200, 20, 60, 2, 2);
-                break;
-        }
+        //使用者選擇角色與對戰對象
+        Scanner scn = new Scanner(System.in);
+        System.out.println("角色列表 \n 1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神 \n 請輸入編號選擇夥伴！");
+        int chooseFriend = scn.nextInt();
+        Friend user = friendList[chooseFriend];
+
+        System.out.println("角色列表 \n 1 艾連葉卡 / 2 艾連葉卡 / 3 艾連葉卡 \n 請輸入編號選擇攻略魔王！");
+        int chooseBoss = scn.nextInt();
+        Boss badGuy = bossList[chooseBoss];
 
         //戰鬥開始
         System.out.println("玩家：\n你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！\n");

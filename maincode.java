@@ -43,7 +43,7 @@ class Character{
 
 class Friend extends Character{
     private int luck;
-    private int onceheal = 70;
+    private int onceheal = 150;
     private int healTimes = 2;
     private int ultCounter;
     private final int fullUltCounter;
@@ -158,7 +158,12 @@ public class FIGHT {
 					System.out.println("異議！！(異議阿哩！)\n");
 					break;
 				case "宮野真守":
-					System.out.println("沒錯，我就是kira。\n");
+                    if(Math.random() <= 0.5){
+                        System.out.println("沒錯，我就是kira。\n");
+                    }
+                    else{
+                        System.out.println("居合手刀。\n");
+                    }
 					break;
 			}
             System.out.println("我方攻擊" + user.getUltATK() + "點傷害");
@@ -166,13 +171,14 @@ public class FIGHT {
         else{
             double critChance = user.getLuck()/1000; //這邊除1000讓下面*10讓數字比較好看
             if(Math.random() < critChance){ //有爆擊
+                System.out.println("爆擊！！");
                 long critATK = Math.round(user.getAttack()*1.5); //round的回傳型態是long
                 badGuy.beAttack((int)critATK*10); //強制轉型
             }
             badGuy.beAttack(user.getAttack());
             user.cutUltCounter();
             System.out.println("我方攻擊" + user.getAttack() + "點傷害");
-            System.out.println("再" + user.getUltCounter() + "次攻擊後會釋放大招");
+            System.out.println("再" + user.getUltCounter() + "次攻擊後會釋放大招\n");
         }
     }
     if(move.equals("2")){ //回血
@@ -213,16 +219,16 @@ public class FIGHT {
 
 public static void roundEnd(int round, Boss badGuy, Friend user) {
 	System.out.println("第" + round + "回合戰況");
-	System.out.println("我方剩餘血量" + user.getHP() + "管\n敵方剩餘血量" + badGuy.getHP() + "管");
+	System.out.println("我方剩餘血量" + user.getHP() + "管　　　敵方剩餘血量" + badGuy.getHP() + "管");
 	System.out.println("------------------------------"); // 30個斜線
 }
     public static void main(String[] args){
         //建立物件
         Friend[] friendList;
         friendList = new Friend[3];
-        friendList[0] = new Friend("爆豪勝己", 130, 30, 80, 0, 5, 4, 100);
-        friendList[1] = new Friend("成步堂龍一", 150, 40, 60, 0, 4, 3, 100);
-        friendList[2] = new Friend("宮野真守", 200, 20, 60, 0, 2, 2, 100);    
+        friendList[0] = new Friend("爆豪勝己", 200, 50, 80, 0, 5, 4, 100);
+        friendList[1] = new Friend("成步堂龍一", 350, 80, 60, 0, 4, 3, 100);
+        friendList[2] = new Friend("宮野真守", 400, 120, 60, 0, 2, 2, 100);    
 
         //使用者選擇角色與對戰對象
         Scanner scn = new Scanner(System.in);
@@ -269,7 +275,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
 					System.out.println("艾連葉卡：\n敬告所有尤米爾的子民，\n我的名字是艾連葉卡，正透過始祖巨人的力量與所有尤米爾的子民對話。\n帕拉迪島上所有用以打造高牆的硬質化已解除，埋藏其中的所有巨人已經開始行動。\n我的目的是保護我成長的帕拉迪島上的人，但世界不僅希望消滅帕拉迪島上的人，更渴望將所有尤米爾子民趕盡殺絕。\n我拒絕接受他們的期望，城牆裡的巨人將會踏遍這座島以外的大地，直到將所有生命都從這世上驅除殆盡。\n");
 					break;
 				case "宇智波班":
-                    System.out.println("宇智波班：天礙震星\n");
+                    System.out.println("宇智波班：\n");
 					break;
 			}
         System.out.println("：開始戰鬥吧！");
@@ -299,6 +305,10 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
             }
             else if(user.getHP()<=0 && badGuy.getHP()>0){
                 System.out.println("YOU DIED");
+                break;
+            }
+            else if(user.getHP()<=0 && badGuy.getHP()<0){
+                System.out.println("兩敗俱傷");
                 break;
             }
 

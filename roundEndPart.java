@@ -1,3 +1,11 @@
+// show_info (角色資訊)
+// 選角色的同時可以查看角色資訊(選項4)，需要設定使用者輸入非1~4數字時的「輸入錯誤」
+// 需要設定加血不可以加超過原本血量，提示語/禁止加血/浪費一回合
+// 修改畫面呈現效果或新增ch13內容
+// 檔案名稱要改成FIGHT顆顆
+
+// 期望新增：幸運值、使用者自行配點，道具class，魔王重生與暴擊
+
 
 int round = 1;  // 回合計次，初始為第一回合
 
@@ -34,6 +42,4 @@ public static void roundEnd(int round, Boss badGuy, Friend user, String move) {
 
 
 
-// getAttack(), getHP() >> 可以被取用
-// show_info (角色資訊)
-// 選角色的同時可以查看角色資訊
+

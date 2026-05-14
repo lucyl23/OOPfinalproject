@@ -118,6 +118,20 @@ public class FIGHT {
         if (user.getUltCounter() == 0){ //放大招
             badGuy.beAttack(useUlt);
             user.resetUltCounter();
+
+            System.out.println("釋放大招！！！！！！！\n");       // 每個角色自己的大招台詞
+			switch (user.getName()){
+				case "爆豪勝己":
+					System.out.println("打爆你 Howitzer Impact\n");
+					break;
+				case "成步堂龍一":
+					System.out.println("異議！！(異議阿哩！)\n");
+					break;
+				case "宮野真守":
+					System.out.println("沒錯，我就是kira。\n");
+					break;
+			}
+
             System.out.println("我方攻擊" + user.getUltATK() + "點傷害");
         }
         else{

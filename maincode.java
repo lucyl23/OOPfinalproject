@@ -197,6 +197,19 @@ public class FIGHT {
 			}
     }
 
+    public static void showCharacterInfo(Friend[] friendList, Scanner scn){
+        System.out.println("請輸入編號選擇要看誰的能力值！");
+        int characterNumber = scn.nextInt();
+        System.out.println(friendList[characterNumber-1].getName() + "血量：" + friendList[characterNumber-1].getHP() + "普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "大招攻擊力" + friendList[characterNumber-1].getUltATK() + "加血次數" + friendList[characterNumber-1].getHealTimes());
+    }
+
+    public static Friend userChooseCharacter(Friend[] friendList, Scanner scn){
+        System.out.println("請輸入編號選擇夥伴！");
+        int chooseFriend = scn.nextInt();
+        Friend user = friendList[chooseFriend-1];
+        return user;
+    }
+
     public static void setCharacterValues(Friend user, Scanner scn){
         //設定角色數值
         System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避），你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
@@ -288,15 +301,6 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         friendList[1] = new Friend("成步堂龍一", 350, 50, 300, 0, 4, 3, 100);
         friendList[2] = new Friend("宮野真守", 400, 70, 200, 0, 2, 2, 100);    
 
-        //使用者選擇角色與對戰對象
-        Scanner scn = new Scanner(System.in);
-        System.out.println("角色列表 \n 1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神 \n 請輸入編號選擇夥伴！");
-        int chooseFriend = scn.nextInt();
-        Friend user = friendList[chooseFriend-1];
-        gameCharacterDialogueFriendBeChosen(user); //氣氛組之角色被選臺詞
-
-        setCharacterValues(user, scn); //設定角色數值
-
         //建立物件之魔王
         Boss[] bossList;
         bossList = new Boss[3];
@@ -304,8 +308,17 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         bossList[1] = new Boss("艾連葉卡", 500, 40, 0, 1);
         bossList[2] = new Boss("宇智波班", 700, 80, 0, 0);
 
+        Scanner scn = new Scanner(System.in);
+
+        System.out.println("角色列表 \n 1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神");
+        showCharacterInfo(friendList, scn); //友方顯示數值
+        Friend user = userChooseCharacter(friendList, scn); //使用者選擇角色
+        gameCharacterDialogueFriendBeChosen(user); //氣氛組之角色被選臺詞
+        setCharacterValues(user, scn); //設定角色數值
+
         //使用者選擇魔王
         System.out.println("角色列表 \n 1 All For One / 2 艾連葉卡 / 3 宇智波班 \n 請輸入編號選擇攻略魔王！");
+        System.out.println("請輸入編號選擇攻略魔王！");
         int chooseBoss = scn.nextInt();
         Boss badGuy = bossList[chooseBoss-1];
 

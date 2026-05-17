@@ -135,6 +135,77 @@ class Boss extends Character{
 }
 
 public class FIGHT {
+    public static void gameCharacterDialogueFriendBeChosen(Friend user){
+    //選角確定台詞
+        switch (user.getName()){
+				case "爆豪勝己":
+					System.out.println("爆豪勝己：蛤！不要命令我！\n");
+					break;
+				case "成步堂龍一":
+					System.out.println("成步堂龍一：辯方已準備完畢。\n");
+					break;
+				case "宮野真守":
+					System.out.println("宮野真守：從今以後，你就要跟你的同伴一起拯救佐賀。我就是那個要把你變成偶像的人！\n");
+					break;
+			}
+    }
+
+    public static void gameCharacterDialogueBossBeChosen(Boss badGuy){
+        switch (badGuy.getName()){
+				case "All For One":
+					System.out.println("All For One：我要得到One For All\n");
+					break;
+				case "艾連葉卡":
+					System.out.println("艾連葉卡：我要把巨人從這個世上一隻不剩地驅逐出去！");
+					break;
+				case "宇智波班":
+                    System.out.println("宇智波班：\n");
+					break;
+		}
+    }
+
+    public static void gameCharacterDialogueBossDie(Boss badGuy){
+    switch (badGuy.getName()){
+		        case "All For One":
+					System.out.println("All For One：One For All是我的啊啊啊啊啊");
+					break;
+				case "艾連葉卡":
+					System.out.println("艾連葉卡：吶...只要把海的另一端的敵人全部殺光...我們就能獲得自由了嗎？");
+					break;
+				case "宇智波班":
+					System.out.println("宇智波班：我不過是想在這虛幻的世界上，畫上一個真實的句點。");
+					break;
+        }
+    }
+
+    public static void gameCharacterDialogueBossAttack(Boss badGuy){
+        switch (badGuy.getName()){
+				case "All For One":
+					System.out.println("All For One：我要奪走你的個性");
+					break;
+				case "艾連葉卡":
+					System.out.println("艾連葉卡：\n敬告所有尤米爾的子民，\n我的名字是艾連葉卡，正透過始祖巨人的力量與所有尤米爾的子民對話。\n帕拉迪島上所有用以打造高牆的硬質化已解除，埋藏其中的所有巨人已經開始行動。\n我的目的是保護我成長的帕拉迪島上的人，但世界不僅希望消滅帕拉迪島上的人，更渴望將所有尤米爾子民趕盡殺絕。\n我拒絕接受他們的期望，城牆裡的巨人將會踏遍這座島以外的大地，直到將所有生命都從這世上驅除殆盡。");
+					break;
+				case "宇智波班":
+                    if(Math.random() <= 0.5){
+                        System.out.println("宇智波班：天礙震星");
+                    }
+                    else{
+                        System.out.println("宇智波班：完全體須佐能乎");
+                    }
+					break;
+			}
+    }
+
+    public static void setCharacterValues(Friend user, Scanner scn){
+        //設定角色數值
+        System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避），你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
+        //這邊可以加上下限限制的if-else
+        int plusATK = scn.nextInt();
+        user.setLuck(user.getPowerPoints() - plusATK);
+        user.setATK(user.getAttack() + plusATK);
+    }
+
     public static void fighting(Boss badGuy, Friend user, Scanner scn){
     //玩家回合開始
     //使用者輸入
@@ -149,20 +220,20 @@ public class FIGHT {
             badGuy.beAttack(useUlt, user.getUltATK());
             user.resetUltCounter();
 
-            System.out.println("釋放大招！！！！！！！\n");       // 每個角色自己的大招台詞
+            System.out.println("釋放大招！！！！！！！");       // 每個角色自己的大招台詞
 			switch (user.getName()){
 				case "爆豪勝己":
-					System.out.println("打爆你 Howitzer Impact\n");
+					System.out.println("爆豪勝己：打爆你 Howitzer Impact");
 					break;
 				case "成步堂龍一":
-					System.out.println("異議！！(異議阿哩！)\n");
+					System.out.println("成步堂龍一：異議！！(異議阿哩！)");
 					break;
 				case "宮野真守":
                     if(Math.random() <= 0.5){
-                        System.out.println("沒錯，我就是kira。\n");
+                        System.out.println("宮野真守：沒錯，我就是kira。");
                     }
                     else{
-                        System.out.println("居合手刀。\n");
+                        System.out.println("宮野真守：居合手刀。");
                     }
 					break;
 			}
@@ -172,7 +243,7 @@ public class FIGHT {
             double critChance = user.getLuck()/1000; //這邊除1000讓下面*10讓數字比較好看
             if(Math.random() < critChance){ //有爆擊
                 System.out.println("爆擊！！");
-                long critATK = Math.round(user.getAttack()*1.5); //round的回傳型態是long
+                long critATK = Math.round(user.getAttack()*2.5); //round的回傳型態是long
                 badGuy.beAttack((int)critATK*10); //強制轉型
             }
             badGuy.beAttack(user.getAttack());
@@ -184,7 +255,7 @@ public class FIGHT {
     if(move.equals("2")){ //回血
         if(user.getHealTimes()>0){
             user.heal();
-            if(user.getHP() > user.getFullHP()){
+            if(user.getHP() > user.getFullHP()){ //血量上限
                 System.out.println("我方回復" + (user.getOnceHeal() - (user.getHP() - user.getFullHP())) + "點血量");
                 user.setHP(user.getFullHP());
             }
@@ -197,23 +268,9 @@ public class FIGHT {
     }
 
     //badGuy回合開始
+    System.out.println("魔王的回合，小心點！");
     user.beAttack(badGuy.getAttack());
-    switch (badGuy.getName()){
-				case "All For One":
-					System.out.println("\n");
-					break;
-				case "艾連葉卡":
-					System.out.println("艾連葉卡：塔塔開欸\n");
-					break;
-				case "宇智波班":
-                    if(Math.random() <= 0.5){
-                        System.out.println("宇智波班：天礙震星\n");
-                    }
-                    else{
-                        System.out.println("宇智波班：完全體須佐能乎\n");
-                    }
-					break;
-			}
+    gameCharacterDialogueBossAttack(badGuy);
     System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
 }
 
@@ -222,62 +279,39 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
 	System.out.println("我方剩餘血量" + user.getHP() + "管　　　敵方剩餘血量" + badGuy.getHP() + "管");
 	System.out.println("------------------------------"); // 30個斜線
 }
+
     public static void main(String[] args){
-        //建立物件
+        //建立物件之夥伴
         Friend[] friendList;
         friendList = new Friend[3];
-        friendList[0] = new Friend("爆豪勝己", 200, 50, 80, 0, 5, 4, 100);
-        friendList[1] = new Friend("成步堂龍一", 350, 80, 60, 0, 4, 3, 100);
-        friendList[2] = new Friend("宮野真守", 400, 120, 60, 0, 2, 2, 100);    
+        friendList[0] = new Friend("爆豪勝己", 200, 30, 350, 0, 5, 4, 100);
+        friendList[1] = new Friend("成步堂龍一", 350, 50, 300, 0, 4, 3, 100);
+        friendList[2] = new Friend("宮野真守", 400, 70, 200, 0, 2, 2, 100);    
 
         //使用者選擇角色與對戰對象
         Scanner scn = new Scanner(System.in);
         System.out.println("角色列表 \n 1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神 \n 請輸入編號選擇夥伴！");
         int chooseFriend = scn.nextInt();
         Friend user = friendList[chooseFriend-1];
+        gameCharacterDialogueFriendBeChosen(user); //氣氛組之角色被選臺詞
 
-        //選角確定台詞
-        switch (user.getName()){
-				case "爆豪勝己":
-					System.out.println("\n");
-					break;
-				case "成步堂龍一":
-					System.out.println("\n");
-					break;
-				case "宮野真守":
-					System.out.println("從今以後，你就要跟你的同伴一起拯救佐賀。我就是那個要把你變成偶像的人！\n");
-					break;
-			}
+        setCharacterValues(user, scn); //設定角色數值
 
-        System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避），你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
-        //這邊可以加上下限限制的if-else
-        int plusATK = scn.nextInt();
-        user.setLuck(user.getPowerPoints() - plusATK);
-        user.setATK(user.getAttack() + plusATK);
-
+        //建立物件之魔王
         Boss[] bossList;
         bossList = new Boss[3];
         bossList[0] = new Boss("All For One", 400, 60, 0, 1);
         bossList[1] = new Boss("艾連葉卡", 500, 40, 0, 1);
         bossList[2] = new Boss("宇智波班", 700, 80, 0, 0);
 
+        //使用者選擇魔王
         System.out.println("角色列表 \n 1 All For One / 2 艾連葉卡 / 3 宇智波班 \n 請輸入編號選擇攻略魔王！");
         int chooseBoss = scn.nextInt();
         Boss badGuy = bossList[chooseBoss-1];
 
         //戰鬥開始
         System.out.println("玩家：\n你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！\n");
-        switch (badGuy.getName()){
-				case "All For One":
-					System.out.println("\n");
-					break;
-				case "艾連葉卡":
-					System.out.println("艾連葉卡：\n敬告所有尤米爾的子民，\n我的名字是艾連葉卡，正透過始祖巨人的力量與所有尤米爾的子民對話。\n帕拉迪島上所有用以打造高牆的硬質化已解除，埋藏其中的所有巨人已經開始行動。\n我的目的是保護我成長的帕拉迪島上的人，但世界不僅希望消滅帕拉迪島上的人，更渴望將所有尤米爾子民趕盡殺絕。\n我拒絕接受他們的期望，城牆裡的巨人將會踏遍這座島以外的大地，直到將所有生命都從這世上驅除殆盡。\n");
-					break;
-				case "宇智波班":
-                    System.out.println("宇智波班：\n");
-					break;
-			}
+        gameCharacterDialogueBossBeChosen(badGuy); //氣氛組之魔王被選臺詞
         System.out.println("：開始戰鬥吧！");
         System.out.println("==============================");
 
@@ -290,17 +324,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
                 roundEnd(round, badGuy, user);
             }
             else if(user.getHP()>0 && badGuy.getHP()<=0){
-                switch (badGuy.getName()){
-				case "All For One":
-					System.out.println("All For One：\n");
-					break;
-				case "艾連葉卡":
-					System.out.println("艾連葉卡：\n");
-					break;
-				case "宇智波班":
-					System.out.println("宇智波班：我不過是想在這虛幻的世界上，畫上一個真實的句點。\n");
-					break;
-			}
+                gameCharacterDialogueBossDie(badGuy); //氣氛組之魔王死掉臺詞
                 break;
             }
             else if(user.getHP()<=0 && badGuy.getHP()>0){
@@ -316,8 +340,8 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         }
 
         //戰鬥結束
+        System.out.println("\n系統臺詞：戰鬥結束");
         System.out.println("啊～又是這個夢。");
-        //這邊感覺是說點話就好
         scn.close();
     }
 }

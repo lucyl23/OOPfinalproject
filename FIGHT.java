@@ -35,7 +35,6 @@ class Character{
     int getAttack(){
         return this.ATK;
     }
-    
     int getUltATK(){
         return UltATK;
     }
@@ -142,6 +141,21 @@ class Boss extends Character{
     }
 }
 
+abstract class Item{   // 抽象類別
+    private String name;
+    
+    Item(String name){
+        this.name = name;
+    }
+    
+    String getName(){
+        return this.name;
+    }
+    
+    abstract void use();  // 抽象方法，使用道具時呼叫
+}
+
+
 public class FIGHT {
     public static void gameCharacterDialogueFriendBeChosen(Friend user){
     //選角確定台詞
@@ -208,7 +222,7 @@ public class FIGHT {
     public static void showCharacterInfo(Friend[] friendList, Scanner scn){
         System.out.println("請輸入角色編號選擇要看誰的能力值！");
         int characterNumber = scn.nextInt();
-        System.out.println(friendList[characterNumber-1].getName() + "　血量：" + friendList[characterNumber-1].getHP() + "　普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "　大招攻擊力：" + friendList[characterNumber-1].getUltATK() + "　加血次數" + friendList[characterNumber-1].getHealTimes());
+        System.out.println(friendList[characterNumber-1].getName() + "　血量：" + friendList[characterNumber-1].getHP() + "　普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "　大招攻擊力：" + friendList[characterNumber-1].getUltATK() + "(" + friendList[characterNumber-1].getUltCounter) + "次攻擊後)" + "　加血次數" + friendList[characterNumber-1].getHealTimes());
     }
 
     public static Friend userChooseCharacter(Friend[] friendList, Scanner scn){
@@ -220,16 +234,14 @@ public class FIGHT {
 
     public static void setCharacterValues(Friend user, Scanner scn){
         //設定角色數值
-        System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避），你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
+        System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避）\n你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
         //這邊可以加上下限限制的if-else
         int plusATK = scn.nextInt();
         user.setLuck(user.getPowerPoints() - plusATK);
         user.setATK(user.getAttack() + plusATK);
     }
 
-    public static int fighting(Boss badGuy, Friend user, Scanner scn){
-    int round = 0;  // 回合計次
-    round += 1;
+    public static void fighting(Boss badGuy, Friend user, Scanner scn){
 
     //玩家回合開始
     System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n1 攻擊 2 回血 \n請輸入行動編號進行動作呀呼");
@@ -296,17 +308,22 @@ public class FIGHT {
     gameCharacterDialogueBossAttack(badGuy);
     System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
 
-    return round;
 }
 
 public static void roundEnd(int round, Boss badGuy, Friend user) {
-	System.out.println("第" + round + "回合戰況");
+	System.out.println("\n第" + round + "回合戰況");
 
     //讓魔王的血量不會是負的
     int printBossHP = badGuy.getHP();
     if(badGuy.getHP() < 0){
         printBossHP = 0;
     }
+	//讓使用者的血量不會是負的
+    int printUserHP = user.getHP();
+    if(badGuy.getHP() < 0){
+        printUserHP = 0;
+    }
+
 
 	System.out.println("我方剩餘血量" + user.getHP() + "管　　　敵方剩餘血量" + printBossHP + "管");
 	System.out.println("------------------------------"); //30個斜線
@@ -360,11 +377,13 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         gameCharacterDialogueBossBeChosen(badGuy); //氣氛組之魔王被選臺詞
         System.out.println("：開始戰鬥吧！");
         System.out.println("==============================");
+        int round = 0;  // 回合初設
 
         //回合中
         while(true){
             if(user.getHP()>0 && badGuy.getHP()>0){
-                int round = fighting(badGuy, user, scn);
+                round += 1; // 回合計次
+                fighting(badGuy, user, scn);
                 roundEnd(round, badGuy, user);
             }
             else if(user.getHP()>0 && badGuy.getHP()<=0){
@@ -391,8 +410,8 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         }
 
         //戰鬥結束
-        System.out.println("\n系統臺詞：戰鬥結束");
-        System.out.println("啊～又是這個夢。");
+        System.out.println("\n系統：戰鬥結束。");
+        System.out.println("：啊～又是這個夢。");
         scn.close();
     }
 }

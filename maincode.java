@@ -132,6 +132,14 @@ class Boss extends Character{
         fullyRecoveredTimes -= 1;
         this.setHP(500);
     }
+
+    int getFullyRecoveredTimes(){
+        return this.fullyRecoveredTimes;
+    }
+
+    int cutFullyRecoveredTimes(){
+        return this.fullyRecoveredTimes-1;
+    }
 }
 
 public class FIGHT {
@@ -181,7 +189,7 @@ public class FIGHT {
     public static void gameCharacterDialogueBossAttack(Boss badGuy){
         switch (badGuy.getName()){
 				case "All For One":
-					System.out.println("All For One：我要奪走你的個性");
+					System.out.println("All For One：我要奪走你的個性。");
 					break;
 				case "艾連葉卡":
 					System.out.println("艾連葉卡：\n敬告所有尤米爾的子民，\n我的名字是艾連葉卡，正透過始祖巨人的力量與所有尤米爾的子民對話。\n帕拉迪島上所有用以打造高牆的硬質化已解除，埋藏其中的所有巨人已經開始行動。\n我的目的是保護我成長的帕拉迪島上的人，但世界不僅希望消滅帕拉迪島上的人，更渴望將所有尤米爾子民趕盡殺絕。\n我拒絕接受他們的期望，城牆裡的巨人將會踏遍這座島以外的大地，直到將所有生命都從這世上驅除殆盡。");
@@ -198,9 +206,9 @@ public class FIGHT {
     }
 
     public static void showCharacterInfo(Friend[] friendList, Scanner scn){
-        System.out.println("請輸入編號選擇要看誰的能力值！");
+        System.out.println("請輸入角色編號選擇要看誰的能力值！");
         int characterNumber = scn.nextInt();
-        System.out.println(friendList[characterNumber-1].getName() + "血量：" + friendList[characterNumber-1].getHP() + "普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "大招攻擊力" + friendList[characterNumber-1].getUltATK() + "加血次數" + friendList[characterNumber-1].getHealTimes());
+        System.out.println(friendList[characterNumber-1].getName() + "　血量：" + friendList[characterNumber-1].getHP() + "　普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "　大招攻擊力：" + friendList[characterNumber-1].getUltATK() + "　加血次數" + friendList[characterNumber-1].getHealTimes());
     }
 
     public static Friend userChooseCharacter(Friend[] friendList, Scanner scn){
@@ -219,10 +227,12 @@ public class FIGHT {
         user.setATK(user.getAttack() + plusATK);
     }
 
-    public static void fighting(Boss badGuy, Friend user, Scanner scn){
+    public static int fighting(Boss badGuy, Friend user, Scanner scn){
+    int round = 0;  // 回合計次
+    round += 1;
+
     //玩家回合開始
-    //使用者輸入
-    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n 1 攻擊 2 回血 \n 請輸入行動編號進行動作呀呼");
+    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n1 攻擊 2 回血 \n請輸入行動編號進行動作呀呼");
     String move = scn.next();
 
     //判斷行動跟多載
@@ -281,16 +291,25 @@ public class FIGHT {
     }
 
     //badGuy回合開始
-    System.out.println("魔王的回合，小心點！");
+    System.out.println("\n魔王的回合，小心點！");
     user.beAttack(badGuy.getAttack());
     gameCharacterDialogueBossAttack(badGuy);
     System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
+
+    return round;
 }
 
 public static void roundEnd(int round, Boss badGuy, Friend user) {
 	System.out.println("第" + round + "回合戰況");
-	System.out.println("我方剩餘血量" + user.getHP() + "管　　　敵方剩餘血量" + badGuy.getHP() + "管");
-	System.out.println("------------------------------"); // 30個斜線
+
+    //讓魔王的血量不會是負的
+    int printBossHP = badGuy.getHP();
+    if(badGuy.getHP() < 0){
+        printBossHP = 0;
+    }
+
+	System.out.println("我方剩餘血量" + user.getHP() + "管　　　敵方剩餘血量" + printBossHP + "管");
+	System.out.println("------------------------------"); //30個斜線
 }
 
     public static void main(String[] args){
@@ -310,35 +329,56 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
 
         Scanner scn = new Scanner(System.in);
 
-        System.out.println("角色列表 \n 1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神");
-        showCharacterInfo(friendList, scn); //友方顯示數值
+        System.out.println("角色列表 \n1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神");
+        System.out.println("要看角色數值嗎？　1 要 / 2 不要");
+        int whetherShowInfo = scn.nextInt();
+
+        int watchTimes = 0; //我不想讓它不會停下來所以做了計次
+        while(whetherShowInfo == 1){
+            showCharacterInfo(friendList, scn); //友方顯示數值
+            watchTimes += 1;
+            if(watchTimes == friendList.length){
+                System.out.println("好了看完了");
+                break;
+            }
+            System.out.println("要繼續看嗎？　1 要 / 2 不要");
+            whetherShowInfo = scn.nextInt();
+        }
+        
         Friend user = userChooseCharacter(friendList, scn); //使用者選擇角色
         gameCharacterDialogueFriendBeChosen(user); //氣氛組之角色被選臺詞
         setCharacterValues(user, scn); //設定角色數值
 
         //使用者選擇魔王
-        System.out.println("角色列表 \n 1 All For One / 2 艾連葉卡 / 3 宇智波班 \n 請輸入編號選擇攻略魔王！");
+        System.out.println("角色列表 \n1 All For One / 2 艾連葉卡 / 3 宇智波班");
         System.out.println("請輸入編號選擇攻略魔王！");
         int chooseBoss = scn.nextInt();
         Boss badGuy = bossList[chooseBoss-1];
 
         //戰鬥開始
-        System.out.println("玩家：\n你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！\n");
+        System.out.println("玩家：你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！");
         gameCharacterDialogueBossBeChosen(badGuy); //氣氛組之魔王被選臺詞
         System.out.println("：開始戰鬥吧！");
         System.out.println("==============================");
 
         //回合中
-        //魔王有一次回滿血那邊還沒用到的樣子
-        int round = 1;  // 回合計次，初始為第一回合
         while(true){
             if(user.getHP()>0 && badGuy.getHP()>0){
-                fighting(badGuy, user, scn);
+                int round = fighting(badGuy, user, scn);
                 roundEnd(round, badGuy, user);
             }
             else if(user.getHP()>0 && badGuy.getHP()<=0){
-                gameCharacterDialogueBossDie(badGuy); //氣氛組之魔王死掉臺詞
-                break;
+                if (badGuy.getFullyRecoveredTimes()>0){
+                    System.out.println("系統：你以為這種小遊戲大魔王不會有二階嗎？哈哈哈你還是太嫩了！");
+                    badGuy.fullyRecovered();
+                    System.out.println("魔王血量：" + badGuy.getHP());
+                    badGuy.cutFullyRecoveredTimes();
+                }
+                else{
+                    gameCharacterDialogueBossDie(badGuy); //氣氛組之魔王死掉臺詞
+                    System.out.println("系統：你是真的太強了。");
+                    break;
+                }
             }
             else if(user.getHP()<=0 && badGuy.getHP()>0){
                 System.out.println("YOU DIED");
@@ -348,8 +388,6 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
                 System.out.println("兩敗俱傷");
                 break;
             }
-
-        round += 1;
         }
 
         //戰鬥結束

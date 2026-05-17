@@ -222,7 +222,7 @@ public class FIGHT {
     public static void showCharacterInfo(Friend[] friendList, Scanner scn){
         System.out.println("請輸入角色編號選擇要看誰的能力值！");
         int characterNumber = scn.nextInt();
-        System.out.println(friendList[characterNumber-1].getName() + "　血量：" + friendList[characterNumber-1].getHP() + "　普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "　大招攻擊力：" + friendList[characterNumber-1].getUltATK() + "(" + friendList[characterNumber-1].getUltCounter) + "次攻擊後)" + "　加血次數" + friendList[characterNumber-1].getHealTimes());
+        System.out.println(friendList[characterNumber-1].getName() + "　血量：" + friendList[characterNumber-1].getHP() + "　普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "　大招攻擊力：" + friendList[characterNumber-1].getUltATK() + " (" + friendList[characterNumber-1].getUltCounter() + "次攻擊後)" + "　加血次數" + friendList[characterNumber-1].getHealTimes());
     }
 
     public static Friend userChooseCharacter(Friend[] friendList, Scanner scn){
@@ -291,10 +291,12 @@ public class FIGHT {
         if(user.getHealTimes()>0){
             user.heal();
             if(user.getHP() > user.getFullHP()){ //血量上限
-                System.out.println("我方回復" + (user.getOnceHeal() - (user.getHP() - user.getFullHP())) + "點血量");
+                System.out.println("我方回復" + (user.getOnceHeal() - (user.getHP() - user.getFullHP())) + "點血量 (滿血為" + user.getFullHP() + ")");
                 user.setHP(user.getFullHP());
             }
-            System.out.println("我方回復" + user.getOnceHeal() + "點血量");
+            else{
+                System.out.println("我方回復" + user.getOnceHeal() + "點血量");
+            }
             System.out.println("還剩下" + user.getHealTimes() + "瓶靈魂瓶");
         }
         else{

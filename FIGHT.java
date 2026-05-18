@@ -1,4 +1,12 @@
 import java.util.Scanner;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
 class Character{
     private String name;
     private int HP;
@@ -157,6 +165,73 @@ abstract class Item{   // 抽象類別
 
 
 public class FIGHT {
+    public static Friend[] getFriendCharacterInfo(String friendListFile){
+        List<Friend> friendList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(friendListFile, StandardCharsets.UTF_8))) {
+        br.readLine();
+        br.readLine(); //跳過前兩行
+
+        String line;
+        
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+
+            String name = parts[0];
+            int HP = Integer.parseInt(parts[1]);
+            int ATK = Integer.parseInt(parts[2]);
+            int ultATK = Integer.parseInt(parts[3]);
+            int luck = Integer.parseInt(parts[4]);
+            int healTimes = Integer.parseInt(parts[5]);
+            int ultCounter = Integer.parseInt(parts[6]);
+            int powerPoints = Integer.parseInt(parts[7]);
+
+            friendList.add(new Friend(name, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints));
+        }
+    }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+    }
+        return friendList.toArray(new Friend[0]);
+    }
+
+    public static Boss[] getBossCharacterInfo(String bossListFile){
+        List<Friend> bossList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(bossListFile, StandardCharsets.UTF_8))) {
+        br.readLine();
+        br.readLine(); //跳過前兩行
+
+        String line;
+        
+        //這邊還沒改我回來再用
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+
+            String name = parts[0];
+            int HP = Integer.parseInt(parts[1]);
+            int ATK = Integer.parseInt(parts[2]);
+            int ultATK = Integer.parseInt(parts[3]);
+            int luck = Integer.parseInt(parts[4]);
+            int healTimes = Integer.parseInt(parts[5]);
+            int ultCounter = Integer.parseInt(parts[6]);
+            int powerPoints = Integer.parseInt(parts[7]);
+
+            bossList.add(new Boss(name, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints));
+        }
+    }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+    }
+        return bossList.toArray(new Boss[0]);
+    }
+
+    public static Item[] getItemCharacterInfo(){
+        Item[] itemList;
+        itemList = new Item[3];
+        return itemList;
+    }
+
     public static void gameCharacterDialogueFriendBeChosen(Friend user){
     //選角確定台詞
         switch (user.getName()){
@@ -168,6 +243,26 @@ public class FIGHT {
 					break;
 				case "宮野真守":
 					System.out.println("宮野真守：從今以後，你就要跟你的同伴一起拯救佐賀。我就是那個要把你變成偶像的人！\n");
+					break;
+			}
+    }
+
+    public static void gameCharacterDialogueFriendUlt(Friend user){
+        System.out.println("釋放大招！！！！！！！");       // 每個角色自己的大招台詞
+			switch (user.getName()){
+				case "爆豪勝己":
+					System.out.println("爆豪勝己：打爆你 Howitzer Impact");
+					break;
+				case "成步堂龍一":
+					System.out.println("成步堂龍一：異議！！(異議阿哩！)");
+					break;
+				case "宮野真守":
+                    if(Math.random() <= 0.5){
+                        System.out.println("宮野真守：沒錯，我就是kira。");
+                    }
+                    else{
+                        System.out.println("宮野真守：居合手刀。");
+                    }
 					break;
 			}
     }
@@ -254,24 +349,7 @@ public class FIGHT {
         if (user.getUltCounter() == 0){ //這次攻擊是大招
             badGuy.beAttack(useUlt, user.getUltATK());
             user.resetUltCounter();
-
-            System.out.println("釋放大招！！！！！！！");       // 每個角色自己的大招台詞
-			switch (user.getName()){
-				case "爆豪勝己":
-					System.out.println("爆豪勝己：打爆你 Howitzer Impact");
-					break;
-				case "成步堂龍一":
-					System.out.println("成步堂龍一：異議！！(異議阿哩！)");
-					break;
-				case "宮野真守":
-                    if(Math.random() <= 0.5){
-                        System.out.println("宮野真守：沒錯，我就是kira。");
-                    }
-                    else{
-                        System.out.println("宮野真守：居合手刀。");
-                    }
-					break;
-			}
+            gameCharacterDialogueFriendUlt(user);
             System.out.println("我方攻擊" + user.getUltATK() + "點傷害");
         }
         else{
@@ -309,7 +387,6 @@ public class FIGHT {
     user.beAttack(badGuy.getAttack());
     gameCharacterDialogueBossAttack(badGuy);
     System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
-
 }
 
 public static void roundEnd(int round, Boss badGuy, Friend user) {
@@ -335,9 +412,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         //建立物件之夥伴
         Friend[] friendList;
         friendList = new Friend[3];
-        friendList[0] = new Friend("爆豪勝己", 200, 30, 350, 0, 5, 4, 100);
-        friendList[1] = new Friend("成步堂龍一", 350, 50, 300, 0, 4, 3, 100);
-        friendList[2] = new Friend("宮野真守", 400, 70, 200, 0, 2, 2, 100);    
+        friendList = getFriendCharacterInfo("friendListFile.txt");   
 
         //建立物件之魔王
         Boss[] bossList;

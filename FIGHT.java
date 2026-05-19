@@ -196,15 +196,14 @@ public class FIGHT {
     }
 
     public static Boss[] getBossCharacterInfo(String bossListFile){
-        List<Friend> bossList = new ArrayList<>();
+        List<Boss> bossList = new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(bossListFile, StandardCharsets.UTF_8))) {
         br.readLine();
         br.readLine(); //跳過前兩行
 
         String line;
-        
-        //這邊還沒改我回來再用
+    
         while ((line = br.readLine()) != null) {
             String[] parts = line.split(",");
 
@@ -212,12 +211,8 @@ public class FIGHT {
             int HP = Integer.parseInt(parts[1]);
             int ATK = Integer.parseInt(parts[2]);
             int ultATK = Integer.parseInt(parts[3]);
-            int luck = Integer.parseInt(parts[4]);
-            int healTimes = Integer.parseInt(parts[5]);
-            int ultCounter = Integer.parseInt(parts[6]);
-            int powerPoints = Integer.parseInt(parts[7]);
-
-            bossList.add(new Boss(name, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints));
+            int fullyRecoveredTimes = Integer.parseInt(parts[4]);
+            bossList.add(new Boss(name, HP, ATK, ultATK, fullyRecoveredTimes));
         }
     }
         catch (IOException e) {
@@ -417,10 +412,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         //建立物件之魔王
         Boss[] bossList;
         bossList = new Boss[3];
-        bossList[0] = new Boss("All For One", 400, 60, 0, 1);
-        bossList[1] = new Boss("艾連葉卡", 500, 40, 0, 1);
-        bossList[2] = new Boss("宇智波班", 700, 80, 0, 0);
-
+        bossList = getBossCharacterInfo("bossListFile.txt");
         Scanner scn = new Scanner(System.in);
 
         System.out.println("角色列表 \n1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神");

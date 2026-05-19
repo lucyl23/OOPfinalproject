@@ -12,9 +12,11 @@ class Character{
     private int HP;
     private int ATK;
     private int UltATK;
+    private String introduceWord;
 
-    Character(String name, int HP, int ATK, int UltATK){
+    Character(String name, String introduceWord, int HP, int ATK, int UltATK){
         this.name = name;
+        this.introduceWord = introduceWord;
         this.HP = HP;
         this.ATK = ATK;
         this.UltATK = UltATK;
@@ -46,6 +48,10 @@ class Character{
     int getUltATK(){
         return UltATK;
     }
+
+    String getIntroduceWord(){
+        return this.introduceWord;
+    }
 }
 
 class Friend extends Character{
@@ -56,8 +62,8 @@ class Friend extends Character{
     private final int fullUltCounter;
     private final int fullHP;
     private int powerPoints;
-    Friend(String name, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints){
-        super(name, HP, ATK, UltATK);
+    Friend(String name, String introduceWord, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints){
+        super(name, introduceWord, HP, ATK, UltATK);
         this.healTimes = healTimes;
         this.ultCounter = ultCounter;
         this.fullUltCounter = ultCounter;
@@ -120,8 +126,8 @@ class Friend extends Character{
 class Boss extends Character{
     private int fullyRecoveredTimes = 1;
 
-    Boss(String name, int HP, int ATK, int UltATK, int fullyRecoveredTimes){
-        super(name, HP, ATK, UltATK);
+    Boss(String name, String introduceWord, int HP, int ATK, int UltATK, int fullyRecoveredTimes){
+        super(name, introduceWord, HP, ATK, UltATK);
         this.fullyRecoveredTimes = fullyRecoveredTimes;
     }
 
@@ -178,15 +184,16 @@ public class FIGHT {
             String[] parts = line.split(",");
 
             String name = parts[0];
-            int HP = Integer.parseInt(parts[1]);
-            int ATK = Integer.parseInt(parts[2]);
-            int ultATK = Integer.parseInt(parts[3]);
-            int luck = Integer.parseInt(parts[4]);
-            int healTimes = Integer.parseInt(parts[5]);
-            int ultCounter = Integer.parseInt(parts[6]);
-            int powerPoints = Integer.parseInt(parts[7]);
+            String introduceWord = parts[1];
+            int HP = Integer.parseInt(parts[2]);
+            int ATK = Integer.parseInt(parts[3]);
+            int ultATK = Integer.parseInt(parts[4]);
+            int luck = Integer.parseInt(parts[5]);
+            int healTimes = Integer.parseInt(parts[6]);
+            int ultCounter = Integer.parseInt(parts[7]);
+            int powerPoints = Integer.parseInt(parts[8]);
 
-            friendList.add(new Friend(name, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints));
+            friendList.add(new Friend(name, introduceWord, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints));
         }
     }
         catch (IOException e) {
@@ -203,16 +210,17 @@ public class FIGHT {
         br.readLine(); //跳過前兩行
 
         String line;
-    
+        
         while ((line = br.readLine()) != null) {
             String[] parts = line.split(",");
 
             String name = parts[0];
-            int HP = Integer.parseInt(parts[1]);
-            int ATK = Integer.parseInt(parts[2]);
-            int ultATK = Integer.parseInt(parts[3]);
-            int fullyRecoveredTimes = Integer.parseInt(parts[4]);
-            bossList.add(new Boss(name, HP, ATK, ultATK, fullyRecoveredTimes));
+            String introduceWord = parts[1];
+            int HP = Integer.parseInt(parts[2]);
+            int ATK = Integer.parseInt(parts[3]);
+            int ultATK = Integer.parseInt(parts[4]);
+            int fullyRecoveredTimes = Integer.parseInt(parts[5]);
+            bossList.add(new Boss(name, introduceWord, HP, ATK, ultATK, fullyRecoveredTimes));
         }
     }
         catch (IOException e) {
@@ -221,10 +229,26 @@ public class FIGHT {
         return bossList.toArray(new Boss[0]);
     }
 
-    public static Item[] getItemCharacterInfo(){
-        Item[] itemList;
-        itemList = new Item[3];
-        return itemList;
+    public static Item[] getItemCharacterInfo(String itemListFile){
+        List<Item> itemList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(itemListFile, StandardCharsets.UTF_8))) {
+        br.readLine();
+        br.readLine(); //跳過前兩行
+
+        String line;
+        
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+
+            String name = parts[0];
+            //itemList.add(new Item(name)); //抽象類別是不是不能這樣寫
+        }
+    }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+    }
+        return itemList.toArray(new Item[0]);
     }
 
     public static void gameCharacterDialogueFriendBeChosen(Friend user){
@@ -399,7 +423,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
     }
 
 
-	System.out.println("我方剩餘血量" + user.getHP() + "管　　　敵方剩餘血量" + printBossHP + "管");
+	System.out.println("我方剩餘血量" + printUserHP + "管　　　敵方剩餘血量" + printBossHP + "管");
 	System.out.println("------------------------------"); //30個斜線
 }
 
@@ -413,9 +437,13 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         Boss[] bossList;
         bossList = new Boss[3];
         bossList = getBossCharacterInfo("bossListFile.txt");
-        Scanner scn = new Scanner(System.in);
 
-        System.out.println("角色列表 \n1 爆豪勝己 大・爆・殺・神 Dynamight / 2 成步堂龍一 百戰百勝 / 3 宮野真守 殘念王子系之心中神");
+        Item[] itemList;
+        itemList = new Item[6];
+        itemList = getItemCharacterInfo("itemListFile.txt");
+        
+        Scanner scn = new Scanner(System.in);
+        System.out.println("角色列表 \n1 " + friendList[0].getName() + " " + friendList[0].getIntroduceWord() + " / 2 " + friendList[1].getName() + " " + friendList[1].getIntroduceWord() + " / 3 " + friendList[2].getName() + " " + friendList[2].getIntroduceWord());
         System.out.println("要看角色數值嗎？　1 要 / 2 不要");
         int whetherShowInfo = scn.nextInt();
 
@@ -436,7 +464,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         setCharacterValues(user, scn); //設定角色數值
 
         //使用者選擇魔王
-        System.out.println("角色列表 \n1 All For One / 2 艾連葉卡 / 3 宇智波班");
+        System.out.println("角色列表 \n1 " + bossList[0].getName() + " " + bossList[0].getIntroduceWord() + " / 2 " + bossList[1].getName() + " " + bossList[1].getIntroduceWord() + " / 3 " + bossList[2].getName() + " " + bossList[2].getIntroduceWord());
         System.out.println("請輸入編號選擇攻略魔王！");
         int chooseBoss = scn.nextInt();
         Boss badGuy = bossList[chooseBoss-1];

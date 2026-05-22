@@ -60,7 +60,7 @@ class Friend extends Character{
     private int healTimes = 2;
     private int ultCounter;
     private final int fullUltCounter;
-    private final int fullHP;
+    private int fullHP;                 // 這邊的final刪除囉因為道具會修改
     private int powerPoints;
     Friend(String name, String introduceWord, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints){
         super(name, introduceWord, HP, ATK, UltATK);
@@ -165,10 +165,41 @@ abstract class Item{   // 抽象類別
     String getName(){
         return this.name;
     }
-    
-    abstract void use();  // 抽象方法，使用道具時呼叫
-}
 
+	abstract void showInfo();  // 在抽到道具時顯示道具名稱、效果
+	
+    abstract void useItem();  // 抽象方法，使用道具時呼叫
+}
+// 子類別：回血、傷害
+class healItem extends Item {
+	private int addHealTimes = 0;    
+	private double addHP = 0.0;
+	private boolean fullyRecovered = false;
+
+	healItem(String name, int addHealTimes, double addHP, boolean fullyRecovered) {
+		super(name);
+		this.addHealTimes = addHealTimes;
+		this.addHP = addHP;
+		this.fullyRecovered = fullyRecovered;
+	}
+
+	@Override
+	void useItem(int addHealTimes) {
+		
+	}
+
+	@Override
+	void useItem(double addHP) {
+		
+	}
+
+	@Override
+	void useItem(boolean fullyRecovered) {
+		if (fullyRecovered) {
+			this.setHP(this.fullHP);     // 這邊不確定可否使用其他類別的函式，google是說要加static才可
+		}
+	}
+}
 
 public class FIGHT {
     public static Friend[] getFriendCharacterInfo(String friendListFile){

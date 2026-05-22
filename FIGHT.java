@@ -29,6 +29,10 @@ class Character{
     void setATK(int ATK){
         this.ATK = ATK;
     }
+    
+    void setUltATK(int UltATK){
+        this.UltATK = UltATK;
+    }
 
     void beAttack(int ATK){
     }
@@ -79,10 +83,6 @@ class Friend extends Character{
     @Override
     void beAttack(String ult, int ultATK){
         this.setHP(this.getHP() - ultATK);
-    }
-
-	void setUltATK(int UltATK){
-        this.UltATK = UltATK;
     }
 
     int getFullHP(){

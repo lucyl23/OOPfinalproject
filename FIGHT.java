@@ -98,6 +98,14 @@ class Friend extends Character{
         this.healTimes -= 1;
     }
 
+	void setHealTimes(int healTimes){
+        this.healTimes = healTimes;
+    }
+	
+	void addHealTimes(int addHealTimes) {
+		this.setHealTimes(this.getHealTimes() + addHealTimes);
+	}
+
     int getUltCounter(){
         return this.ultCounter;
     }
@@ -157,47 +165,66 @@ class Boss extends Character{
 
 abstract class Item{   // 抽象類別
     private String name;
+	private String introduceWord;
     
-    Item(String name){
+    Item(String name, String introduceWord){
         this.name = name;
+		this.introduceWord = introduceWord;
     }
     
     String getName(){
         return this.name;
     }
 
+	String getIntroduceWord(){
+        return this.introduceWord;
+    }
+	
 	abstract void showInfo();  // 在抽到道具時顯示道具名稱、效果
 	
-    abstract void useItem();  // 抽象方法，使用道具時呼叫
+    abstract void useItem(Friend user);  // 抽象方法，使用道具時呼叫
+	
 }
 // 子類別：回血、傷害
-class healItem extends Item {
+class HealItem extends Item {
 	private int addHealTimes = 0;    
-	private double addHP = 0.0;
+	private int addHP = 0;
 	private boolean fullyRecovered = false;
 
-	healItem(String name, int addHealTimes, double addHP, boolean fullyRecovered) {
-		super(name);
+	HealItem(String name, String introduceWord, int addHealTimes, int addHP, boolean fullyRecovered) {
+		super(name, introduceWord);
 		this.addHealTimes = addHealTimes;
 		this.addHP = addHP;
 		this.fullyRecovered = fullyRecovered;
 	}
 
+	int getAddHealTime(){
+        return this.addHealTime;
+    }
+
+	int getAddHP(){
+        return this.addHP;
+    }
+	
 	@Override
-	void useItem(int addHealTimes) {
-		
+	void showInfo() {
+		System.out.println("道具名稱：" + this.name + "\n道具效果：" + this.introduceWord);
 	}
 
 	@Override
-	void useItem(double addHP) {
+	void useItem(Friend user) {     // 出現於抽到道具後&血量<0時，前言使用了道具name！
+		if (this.fullyRecovered) {
+            user.setHP(user.getfullHP()); 
+            System.out.println(user.getName() + " 滿血復活！可以再大戰三百回合啦！");
+        } else if (this.addHP > 0) {
+            user.setHP(user.getHP() + this.getAddHP());
+            System.out.println(user.getName() + " 血量最大值增加了 " + this.getAddHP() + " 管！(現為" + user.getHP() + "管血量)");
+        }
 		
-	}
-
-	@Override
-	void useItem(boolean fullyRecovered) {
-		if (fullyRecovered) {
-			this.setHP(this.fullHP);     // 這邊不確定可否使用其他類別的函式，google是說要加static才可
-		}
+        if (this.addHealTimes > 0) {
+            user.addHealTimes(this.getAddHealTimes());
+            System.out.println("靈魂瓶增加了 " + this.addHealTimes + " 次！");
+        }
 	}
 }
 

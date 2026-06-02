@@ -1,5 +1,3 @@
-// FIGHT檔20260528複製，準備加入介面!
-
 import java.util.Scanner;
 
 import java.io.BufferedReader;

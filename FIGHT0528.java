@@ -1,10 +1,10 @@
 import java.util.Scanner;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 class Character{
@@ -74,7 +74,7 @@ class Character{
 
 class Friend extends Character{
     private int luck;
-    private int onceheal = 150;
+    private int onceheal = 100;
     private int healTimes = 2;
     private int ultCounter;
     private final int fullUltCounter;
@@ -284,30 +284,25 @@ class DamageItem extends Item {
 public class FIGHT0528 {
     public static Friend[] getFriendCharacterInfo(String friendListFile){
         List<Friend> friendList = new ArrayList<>();
+        try{
+            List<String> lines = Files.readAllLines(Paths.get(friendListFile), StandardCharsets.UTF_8);
+            for (int i = 2; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(",");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(friendListFile, StandardCharsets.UTF_8))) {
-        br.readLine();
-        br.readLine(); //跳過前兩行
+                String name = parts[0];
+                String introduceWord = parts[1];
+                int HP = Integer.parseInt(parts[2]);
+                int ATK = Integer.parseInt(parts[3]);
+                int ultATK = Integer.parseInt(parts[4]);
+                int luck = Integer.parseInt(parts[5]);
+                int healTimes = Integer.parseInt(parts[6]);
+                int ultCounter = Integer.parseInt(parts[7]);
+                int powerPoints = Integer.parseInt(parts[8]);
+                String CharacterDialogueBeChosen = parts[9];
+                String CharacterDialogueAttack1 = parts[10];
+                String CharacterDialogueAttack2 = parts[11];
 
-        String line;
-        
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(",");
-
-            String name = parts[0];
-            String introduceWord = parts[1];
-            int HP = Integer.parseInt(parts[2]);
-            int ATK = Integer.parseInt(parts[3]);
-            int ultATK = Integer.parseInt(parts[4]);
-            int luck = Integer.parseInt(parts[5]);
-            int healTimes = Integer.parseInt(parts[6]);
-            int ultCounter = Integer.parseInt(parts[7]);
-            int powerPoints = Integer.parseInt(parts[8]);
-            String CharacterDialogueBeChosen = parts[9];
-            String CharacterDialogueAttack1 = parts[10];
-            String CharacterDialogueAttack2 = parts[11];
-
-            friendList.add(new Friend(name, introduceWord, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2));
+                friendList.add(new Friend(name, introduceWord, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2));
         }
     }
         catch (IOException e) {
@@ -317,27 +312,22 @@ public class FIGHT0528 {
     }
     public static Boss[] getBossCharacterInfo(String bossListFile){
         List<Boss> bossList = new ArrayList<>();
+        try{
+            List<String> lines = Files.readAllLines(Paths.get(bossListFile), StandardCharsets.UTF_8);
+            for (int i = 2; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(",");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(bossListFile, StandardCharsets.UTF_8))) {
-        br.readLine();
-        br.readLine(); //跳過前兩行
-
-        String line;
-        
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(",");
-
-            String name = parts[0];
-            String introduceWord = parts[1];
-            int HP = Integer.parseInt(parts[2]);
-            int ATK = Integer.parseInt(parts[3]);
-            int ultATK = Integer.parseInt(parts[4]);
-            int fullyRecoveredTimes = Integer.parseInt(parts[5]);
-            String CharacterDialogueBeChosen = parts[6];
-            String CharacterDialogueAttack1 = parts[7];
-            String CharacterDialogueAttack2 = parts[8];
-            String CharacterDialogueDie = parts[9];
-            bossList.add(new Boss(name, introduceWord, HP, ATK, ultATK, fullyRecoveredTimes, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2, CharacterDialogueDie));
+                String name = parts[0];
+                String introduceWord = parts[1];
+                int HP = Integer.parseInt(parts[2]);
+                int ATK = Integer.parseInt(parts[3]);
+                int ultATK = Integer.parseInt(parts[4]);
+                int fullyRecoveredTimes = Integer.parseInt(parts[5]);
+                String CharacterDialogueBeChosen = parts[6];
+                String CharacterDialogueAttack1 = parts[7];
+                String CharacterDialogueAttack2 = parts[8];
+                String CharacterDialogueDie = parts[9];
+                bossList.add(new Boss(name, introduceWord, HP, ATK, ultATK, fullyRecoveredTimes, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2, CharacterDialogueDie));
         }
     }
         catch (IOException e) {
@@ -347,22 +337,17 @@ public class FIGHT0528 {
     }
     public static HealItem[] getHealItemCharacterInfo(String healItemListFile){
         List<Item> healItemList = new ArrayList<>();
+        try{
+            List<String> lines = Files.readAllLines(Paths.get(healItemListFile), StandardCharsets.UTF_8);
+            for (int i = 2; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(",");
 
-        try (BufferedReader br = new BufferedReader(new FileReader(healItemListFile, StandardCharsets.UTF_8))) {
-        br.readLine();
-        br.readLine(); //跳過前兩行
-
-        String line;
-        
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(",");
-
-            String name = parts[0];
-            String introduceWord = parts[1];
-            int addHealTimes = Integer.parseInt(parts[2]);
-            int addHP = Integer.parseInt(parts[3]);
-            boolean fullyRecovered = Boolean.parseBoolean(parts[4]);
-            healItemList.add(new HealItem(name, introduceWord, addHealTimes, addHP, fullyRecovered));
+                String name = parts[0];
+                String introduceWord = parts[1];
+                int addHealTimes = Integer.parseInt(parts[2]);
+                int addHP = Integer.parseInt(parts[3]);
+                boolean fullyRecovered = Boolean.parseBoolean(parts[4]);
+                healItemList.add(new HealItem(name, introduceWord, addHealTimes, addHP, fullyRecovered));
         }
     }
         catch (IOException e) {
@@ -373,21 +358,16 @@ public class FIGHT0528 {
     public static DamageItem[] getDamageItemCharacterInfo(String damageItemListFile){
         List<Item> damageItemList = new ArrayList<>();
 
-        try (BufferedReader br = new BufferedReader(new FileReader(damageItemListFile, StandardCharsets.UTF_8))) {
-        br.readLine();
-        br.readLine(); //跳過前兩行
-
-        String line;
-        
-        while ((line = br.readLine()) != null) {
-            String[] parts = line.split(",");
-
-            String name = parts[0];
-            String introduceWord = parts[1];
-            int ATKTimes = Integer.parseInt(parts[2]);
-            int addUltATK = Integer.parseInt(parts[3]);
-            int addCurse = Integer.parseInt(parts[4]);
-            damageItemList.add(new DamageItem(name, introduceWord, ATKTimes, addUltATK, addCurse));
+        try{
+            List<String> lines = Files.readAllLines(Paths.get(damageItemListFile), StandardCharsets.UTF_8);
+            for (int i = 2; i < lines.size(); i++) {
+                String[] parts = lines.get(i).split(",");
+                String name = parts[0];
+                String introduceWord = parts[1];
+                int ATKTimes = Integer.parseInt(parts[2]);
+                int addUltATK = Integer.parseInt(parts[3]);
+                int addCurse = Integer.parseInt(parts[4]);
+                damageItemList.add(new DamageItem(name, introduceWord, ATKTimes, addUltATK, addCurse));
         }
     }
         catch (IOException e) {
@@ -474,7 +454,7 @@ public class FIGHT0528 {
 
     public static void fighting(Boss badGuy, Friend user, Item pulledItem, Scanner scn){
     //玩家回合開始
-    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n1 攻擊 2 回血 3 使用道具\n請輸入行動編號進行動作呀呼");
+    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n1 攻擊 2 回血\n請輸入行動編號進行動作呀呼");
     String move = scn.next();
 
     //判斷行動跟多載
@@ -488,10 +468,10 @@ public class FIGHT0528 {
             System.out.println("我方攻擊" + user.getUltATK() + "點傷害");
         }
         else{
-            double critChance = user.getLuck()/1000; //這邊除1000讓下面*10讓數字比較好看
+            double critChance = user.getLuck()/100.0;
             if(Math.random() < critChance){ //有爆擊
                 System.out.println("爆擊！！");
-                long critATK = Math.round(user.getAttack()*2.5); //round的回傳型態是long
+                long critATK = Math.round(user.getAttack()*4); //round的回傳型態是long
                 badGuy.beAttack((int)critATK*10); //強制轉型
             }
             badGuy.beAttack(user.getAttack());
@@ -598,7 +578,6 @@ public class FIGHT0528 {
             pulledItem = gachaDamageItem(user, damageItemList);
         }
         pulledItem.showInfo();
-        pulledItem.useItem(user, badGuy);
 
         //戰鬥開始
         System.out.println("玩家：你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！");
@@ -606,7 +585,7 @@ public class FIGHT0528 {
         System.out.println("：開始戰鬥吧！");
         System.out.println("==============================");
         int round = 0;  // 回合初設
-
+        pulledItem.useItem(user, badGuy);
         //回合中
         while(true){
             if(user.getHP()>0 && badGuy.getHP()>0){

@@ -517,28 +517,7 @@ public class FIGHT0528 {
         else{
             System.out.println("你的靈魂瓶已用完，你怎麼忘記了，下去。");
         }
-    if(move.equals("3")){
-        pulledItem.useItem(user, badGuy);
-        switch (pulledItem.getName()) {
-            case "恢復女郎老師的KISS":
-                
-                break;
-            case "發目明同學提供的新道具":
-                break;
-            case "看廣告復活":
-                
-                break;
-            case "鏡魔法":
-                break;
-            case "名字1":
-                
-                break;
-            case "名字2":
-                break;
         }
-    }
-    }
-
     //badGuy回合開始
     System.out.println("\n魔王的回合，小心點！");
     user.beAttack(badGuy.getAttack());
@@ -611,7 +590,7 @@ public class FIGHT0528 {
         int chooseBoss = scn.nextInt();
         Boss badGuy = bossList[chooseBoss-1];
 
-        //抽道具
+        //道具
         System.out.println("抽道具");
         Item pulledItem;
         if (Math.random() <= 0.5){
@@ -621,6 +600,7 @@ public class FIGHT0528 {
             pulledItem = gachaDamageItem(user, damageItemList);
         }
         pulledItem.showInfo();
+        pulledItem.useItem(user, badGuy);
 
         //戰鬥開始
         System.out.println("玩家：你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！");

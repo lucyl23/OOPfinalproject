@@ -493,7 +493,7 @@ public class FIGHT0528 {
             System.out.println("還剩下" + user.getHealTimes() + "瓶靈魂瓶");
         }
         else{
-            System.out.println("你的靈魂瓶已用完，你怎麼忘記了，下去。");
+            System.out.println("你的靈魂瓶已用完，怎麼忘記了，下去。");
         }
         }
     //badGuy回合開始

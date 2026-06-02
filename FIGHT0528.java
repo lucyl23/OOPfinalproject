@@ -15,13 +15,19 @@ class Character{
     private int ATK;
     private int UltATK;
     private String introduceWord;
+    private String CharacterDialogueBeChosen;
+    private String CharacterDialogueAttack1;
+    private String CharacterDialogueAttack2;
 
-    Character(String name, String introduceWord, int HP, int ATK, int UltATK){
+    Character(String name, String introduceWord, int HP, int ATK, int UltATK, String CharacterDialogueBeChosen, String CharacterDialogueAttack1, String CharacterDialogueAttack2){
         this.name = name;
         this.introduceWord = introduceWord;
         this.HP = HP;
         this.ATK = ATK;
         this.UltATK = UltATK;
+        this.CharacterDialogueBeChosen = CharacterDialogueBeChosen;
+        this.CharacterDialogueAttack1 = CharacterDialogueAttack1;
+        this.CharacterDialogueAttack2 = CharacterDialogueAttack2;
     }
 
     void setHP(int hp){
@@ -54,9 +60,17 @@ class Character{
     int getUltATK(){
         return UltATK;
     }
-
     String getIntroduceWord(){
         return this.introduceWord;
+    }
+    String getgameCharacterDialogueBeChosen(){
+        return this.CharacterDialogueBeChosen;
+    }
+    String getgameCharacterDialogueAttack1(){
+        return this.CharacterDialogueAttack1;
+    }
+    String getgameCharacterDialogueAttack2(){
+        return this.CharacterDialogueAttack2;
     }
 }
 
@@ -66,10 +80,11 @@ class Friend extends Character{
     private int healTimes = 2;
     private int ultCounter;
     private final int fullUltCounter;
-    private int fullHP;                 // 這邊的final刪除囉因為道具會修改
+    private int fullHP;
     private int powerPoints;
-    Friend(String name, String introduceWord, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints){
-        super(name, introduceWord, HP, ATK, UltATK);
+    Friend(String name, String introduceWord, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints, String CharacterDialogueBeChosen, String CharacterDialogueAttack1, String CharacterDialogueAttack2){
+        super(name, introduceWord, HP, ATK, UltATK, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2);
+        this.luck = luck;
         this.healTimes = healTimes;
         this.ultCounter = ultCounter;
         this.fullUltCounter = ultCounter;
@@ -81,57 +96,44 @@ class Friend extends Character{
     void beAttack(int ATK){
         this.setHP(this.getHP() - ATK);
     }
-
     @Override
     void beAttack(String ult, int ultATK){
         this.setHP(this.getHP() - ultATK);
     }
-
     int getFullHP(){
         return this.fullHP;
     }
-
     int getHealTimes(){
         return this.healTimes;
     }
-
     int getOnceHeal(){
         return this.onceheal;
     }
-
     void heal(){
         this.setHP(this.getHP() + this.onceheal);
         this.healTimes -= 1;
     }
-
 	void setHealTimes(int healTimes){
         this.healTimes = healTimes;
     }
-	
 	void addHealTimes(int addHealTimes) {
 		this.setHealTimes(this.getHealTimes() + addHealTimes);
 	}
-
     int getUltCounter(){
         return this.ultCounter;
     }
-
     void cutUltCounter(){
         this.ultCounter -= 1;
     }
-
     void resetUltCounter(){
         this.ultCounter = fullUltCounter;
     }
-
     void setLuck(int luck){
         this.luck = luck;
     }
-
     int getLuck(){
         return this.luck;
     }
-
     int getPowerPoints(){
         return this.powerPoints;
     }
@@ -139,33 +141,34 @@ class Friend extends Character{
 
 class Boss extends Character{
     private int fullyRecoveredTimes = 1;
+    private String CharacterDialogueDie;
 
-    Boss(String name, String introduceWord, int HP, int ATK, int UltATK, int fullyRecoveredTimes){
-        super(name, introduceWord, HP, ATK, UltATK);
+    Boss(String name, String introduceWord, int HP, int ATK, int UltATK, int fullyRecoveredTimes, String CharacterDialogueBeChosen, String CharacterDialogueAttack1, String CharacterDialogueAttack2, String CharacterDialogueDie){
+        super(name, introduceWord, HP, ATK, UltATK, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2);
         this.fullyRecoveredTimes = fullyRecoveredTimes;
+        this.CharacterDialogueDie = CharacterDialogueDie;
     }
 
     @Override
     void beAttack(int ATK){
         this.setHP(this.getHP() - ATK);
     }
-
     @Override
     void beAttack(String ult, int ultATK){
         this.setHP(this.getHP() - ultATK);
     }
-
     void fullyRecovered(){
         fullyRecoveredTimes -= 1;
         this.setHP(500);
     }
-
     int getFullyRecoveredTimes(){
         return this.fullyRecoveredTimes;
     }
-
     int cutFullyRecoveredTimes(){
         return this.fullyRecoveredTimes-1;
+    }
+    String getgameCharacterDialogueDie(){
+        return this.CharacterDialogueDie;
     }
 }
 
@@ -199,7 +202,7 @@ class HealItem extends Item {
 	private int addHP = 0;
 	private boolean fullyRecovered = false;
 
-	HealItem(String name, String introduceWord, int addHealTimes, int addHP, boolean fullyRecovered) {
+	HealItem(String name, String introduceWord, int addHealTimes, int addHP, boolean fullyRecovered){
 		super(name, introduceWord);
 		this.addHealTimes = addHealTimes;
 		this.addHP = addHP;
@@ -242,7 +245,7 @@ class DamageItem extends Item {
 	private int addUltATK = 0;
 	private int addCurse = 0;
 
-	DamageItem(String name, String introduceWord, int ATKTimes, int addUltATK, int addCurse) {
+	DamageItem(String name, String introduceWord, int ATKTimes, int addUltATK, int addCurse){
 		super(name, introduceWord);
 		this.ATKTimes = ATKTimes;
 		this.addUltATK = addUltATK;
@@ -280,7 +283,7 @@ class DamageItem extends Item {
 	}
 }
 
-public class FIGHT {
+public class FIGHT0528 {
     public static Friend[] getFriendCharacterInfo(String friendListFile){
         List<Friend> friendList = new ArrayList<>();
 
@@ -302,8 +305,11 @@ public class FIGHT {
             int healTimes = Integer.parseInt(parts[6]);
             int ultCounter = Integer.parseInt(parts[7]);
             int powerPoints = Integer.parseInt(parts[8]);
+            String CharacterDialogueBeChosen = parts[9];
+            String CharacterDialogueAttack1 = parts[10];
+            String CharacterDialogueAttack2 = parts[11];
 
-            friendList.add(new Friend(name, introduceWord, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints));
+            friendList.add(new Friend(name, introduceWord, HP, ATK, ultATK, luck, healTimes, ultCounter, powerPoints, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2));
         }
     }
         catch (IOException e) {
@@ -311,7 +317,6 @@ public class FIGHT {
     }
         return friendList.toArray(new Friend[0]);
     }
-
     public static Boss[] getBossCharacterInfo(String bossListFile){
         List<Boss> bossList = new ArrayList<>();
 
@@ -330,7 +335,11 @@ public class FIGHT {
             int ATK = Integer.parseInt(parts[3]);
             int ultATK = Integer.parseInt(parts[4]);
             int fullyRecoveredTimes = Integer.parseInt(parts[5]);
-            bossList.add(new Boss(name, introduceWord, HP, ATK, ultATK, fullyRecoveredTimes));
+            String CharacterDialogueBeChosen = parts[6];
+            String CharacterDialogueAttack1 = parts[7];
+            String CharacterDialogueAttack2 = parts[8];
+            String CharacterDialogueDie = parts[9];
+            bossList.add(new Boss(name, introduceWord, HP, ATK, ultATK, fullyRecoveredTimes, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2, CharacterDialogueDie));
         }
     }
         catch (IOException e) {
@@ -338,11 +347,10 @@ public class FIGHT {
     }
         return bossList.toArray(new Boss[0]);
     }
+    public static HealItem[] getHealItemCharacterInfo(String healItemListFile){
+        List<Item> healItemList = new ArrayList<>();
 
-    public static Item[] getItemCharacterInfo(String itemListFile){
-        List<Item> itemList = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(itemListFile, StandardCharsets.UTF_8))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(healItemListFile, StandardCharsets.UTF_8))) {
         br.readLine();
         br.readLine(); //跳過前兩行
 
@@ -352,95 +360,69 @@ public class FIGHT {
             String[] parts = line.split(",");
 
             String name = parts[0];
-            //itemList.add(new Item(name)); //抽象類別是不是不能這樣寫
+            String introduceWord = parts[1];
+            int addHealTimes = Integer.parseInt(parts[2]);
+            int addHP = Integer.parseInt(parts[3]);
+            boolean fullyRecovered = Boolean.parseBoolean(parts[4]);
+            healItemList.add(new HealItem(name, introduceWord, addHealTimes, addHP, fullyRecovered));
         }
     }
         catch (IOException e) {
             System.out.println(e.getMessage());
     }
-        return itemList.toArray(new Item[0]);
+        return healItemList.toArray(new HealItem[0]);
+    }
+    public static DamageItem[] getDamageItemCharacterInfo(String damageItemListFile){
+        List<Item> damageItemList = new ArrayList<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(damageItemListFile, StandardCharsets.UTF_8))) {
+        br.readLine();
+        br.readLine(); //跳過前兩行
+
+        String line;
+        
+        while ((line = br.readLine()) != null) {
+            String[] parts = line.split(",");
+
+            String name = parts[0];
+            String introduceWord = parts[1];
+            int ATKTimes = Integer.parseInt(parts[2]);
+            int addUltATK = Integer.parseInt(parts[3]);
+            int addCurse = Integer.parseInt(parts[4]);
+            damageItemList.add(new DamageItem(name, introduceWord, ATKTimes, addUltATK, addCurse));
+        }
+    }
+        catch (IOException e) {
+            System.out.println(e.getMessage());
+    }
+        return damageItemList.toArray(new DamageItem[0]);
     }
 
     public static void gameCharacterDialogueFriendBeChosen(Friend user){
-    //選角確定台詞
-        switch (user.getName()){
-				case "爆豪勝己":
-					System.out.println("爆豪勝己：蛤！不要命令我！\n");
-					break;
-				case "成步堂龍一":
-					System.out.println("成步堂龍一：辯方已準備完畢。\n");
-					break;
-				case "宮野真守":
-					System.out.println("宮野真守：從今以後，你就要跟你的同伴一起拯救佐賀。我就是那個要把你變成偶像的人！\n");
-					break;
-			}
+		System.out.println(user.getName() + "：" + user.getgameCharacterDialogueBeChosen());
     }
-
     public static void gameCharacterDialogueFriendUlt(Friend user){
         System.out.println("釋放大招！！！！！！！");       // 每個角色自己的大招台詞
-			switch (user.getName()){
-				case "爆豪勝己":
-					System.out.println("爆豪勝己：打爆你 Howitzer Impact");
-					break;
-				case "成步堂龍一":
-					System.out.println("成步堂龍一：異議！！(異議阿哩！)");
-					break;
-				case "宮野真守":
-                    if(Math.random() <= 0.5){
-                        System.out.println("宮野真守：沒錯，我就是kira。");
-                    }
-                    else{
-                        System.out.println("宮野真守：居合手刀。");
-                    }
-					break;
-			}
-    }
-
-    public static void gameCharacterDialogueBossBeChosen(Boss badGuy){
-        switch (badGuy.getName()){
-				case "All For One":
-					System.out.println("All For One：我要得到One For All\n");
-					break;
-				case "艾連葉卡":
-					System.out.println("艾連葉卡：我要把巨人從這個世上一隻不剩地驅逐出去！");
-					break;
-				case "宇智波班":
-                    System.out.println("宇智波班：\n");
-					break;
+        if(Math.random() <= 0.5){
+            System.out.println(user.getName() + "：" + user.getgameCharacterDialogueAttack1());
+        }
+        else{
+            System.out.println(user.getName() + "：" + user.getgameCharacterDialogueAttack2());
 		}
     }
-
-    public static void gameCharacterDialogueBossDie(Boss badGuy){
-    switch (badGuy.getName()){
-		        case "All For One":
-					System.out.println("All For One：One For All是我的啊啊啊啊啊");
-					break;
-				case "艾連葉卡":
-					System.out.println("艾連葉卡：吶...只要把海的另一端的敵人全部殺光...我們就能獲得自由了嗎？");
-					break;
-				case "宇智波班":
-					System.out.println("宇智波班：我不過是想在這虛幻的世界上，畫上一個真實的句點。");
-					break;
-        }
+    public static void gameCharacterDialogueBossBeChosen(Boss badGuy){
+        System.out.println(badGuy.getName() + "：" + badGuy.getgameCharacterDialogueBeChosen());
     }
-
+    public static void gameCharacterDialogueBossDie(Boss badGuy){
+        System.out.println(badGuy.getName() + "：" + badGuy.getgameCharacterDialogueDie());
+    }
     public static void gameCharacterDialogueBossAttack(Boss badGuy){
-        switch (badGuy.getName()){
-				case "All For One":
-					System.out.println("All For One：我要奪走你的個性。");
-					break;
-				case "艾連葉卡":
-					System.out.println("艾連葉卡：\n敬告所有尤米爾的子民，\n我的名字是艾連葉卡，正透過始祖巨人的力量與所有尤米爾的子民對話。\n帕拉迪島上所有用以打造高牆的硬質化已解除，埋藏其中的所有巨人已經開始行動。\n我的目的是保護我成長的帕拉迪島上的人，但世界不僅希望消滅帕拉迪島上的人，更渴望將所有尤米爾子民趕盡殺絕。\n我拒絕接受他們的期望，城牆裡的巨人將會踏遍這座島以外的大地，直到將所有生命都從這世上驅除殆盡。");
-					break;
-				case "宇智波班":
-                    if(Math.random() <= 0.5){
-                        System.out.println("宇智波班：天礙震星");
-                    }
-                    else{
-                        System.out.println("宇智波班：完全體須佐能乎");
-                    }
-					break;
-			}
+        if(Math.random() <= 0.5){
+            System.out.println(badGuy.getName() + "：" + badGuy.getgameCharacterDialogueAttack1());
+        }
+        else{
+            System.out.println(badGuy.getName() + "：" + badGuy.getgameCharacterDialogueAttack2());
+		}
     }
 
     public static void showCharacterInfo(Friend[] friendList, Scanner scn){
@@ -448,14 +430,12 @@ public class FIGHT {
         int characterNumber = scn.nextInt();
         System.out.println(friendList[characterNumber-1].getName() + "　血量：" + friendList[characterNumber-1].getHP() + "　普攻攻擊力：" + friendList[characterNumber-1].getAttack() + "　大招攻擊力：" + friendList[characterNumber-1].getUltATK() + " (" + friendList[characterNumber-1].getUltCounter() + "次攻擊後)" + "　加血次數" + friendList[characterNumber-1].getHealTimes());
     }
-
     public static Friend userChooseCharacter(Friend[] friendList, Scanner scn){
         System.out.println("請輸入編號選擇夥伴！");
         int chooseFriend = scn.nextInt();
         Friend user = friendList[chooseFriend-1];
         return user;
     }
-
     public static void setCharacterValues(Friend user, Scanner scn){
         //設定角色數值
         System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避）\n你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
@@ -465,10 +445,38 @@ public class FIGHT {
         user.setATK(user.getAttack() + plusATK);
     }
 
-    public static void fighting(Boss badGuy, Friend user, Scanner scn){
+    public static HealItem gachaHealItem(Friend user, HealItem[] healItemList){
+        HealItem pulledItem;
+        double dropRate = 1/healItemList.length;
+        if(Math.random() <= dropRate*1){
+            pulledItem = healItemList[0];
+        }
+        else if(Math.random() > dropRate*1 && Math.random() <= dropRate*2){
+            pulledItem = healItemList[1];
+        }
+        else{
+            pulledItem = healItemList[2];
+        }
+        return pulledItem;
+    }
+    public static DamageItem gachaDamageItem(Friend user, DamageItem[] damageItemList){
+        DamageItem pulledItem;
+        double dropRate = 1/damageItemList.length;
+        if(Math.random() <= dropRate*1){
+            pulledItem = damageItemList[0];
+        }
+        else if(Math.random() > dropRate*1 && Math.random() <= dropRate*2){
+            pulledItem = damageItemList[1];
+        }
+        else{
+            pulledItem = damageItemList[2];
+        }
+        return pulledItem;
+    }
 
+    public static void fighting(Boss badGuy, Friend user, Item pulledItem, Scanner scn){
     //玩家回合開始
-    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n1 攻擊 2 回血 \n請輸入行動編號進行動作呀呼");
+    System.out.println("輪到你的回合！決定你的美妙舞姿吧！\n1 攻擊 2 回血 3 使用道具\n請輸入行動編號進行動作呀呼");
     String move = scn.next();
 
     //判斷行動跟多載
@@ -509,6 +517,26 @@ public class FIGHT {
         else{
             System.out.println("你的靈魂瓶已用完，你怎麼忘記了，下去。");
         }
+    if(move.equals("3")){
+        pulledItem.useItem(user, badGuy);
+        switch (pulledItem.getName()) {
+            case "恢復女郎老師的KISS":
+                
+                break;
+            case "發目明同學提供的新道具":
+                break;
+            case "看廣告復活":
+                
+                break;
+            case "鏡魔法":
+                break;
+            case "名字1":
+                
+                break;
+            case "名字2":
+                break;
+        }
+    }
     }
 
     //badGuy回合開始
@@ -518,40 +546,44 @@ public class FIGHT {
     System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
 }
 
-public static void roundEnd(int round, Boss badGuy, Friend user) {
-	System.out.println("\n第" + round + "回合戰況");
+    public static void roundEnd(int round, Boss badGuy, Friend user) {
+	    System.out.println("\n第" + round + "回合戰況");
 
     //讓魔王的血量不會是負的
-    int printBossHP = badGuy.getHP();
-    if(badGuy.getHP() < 0){
+        int printBossHP = badGuy.getHP();
+            if(badGuy.getHP() < 0){
         printBossHP = 0;
-    }
-	//讓使用者的血量不會是負的
-    int printUserHP = user.getHP();
-    if(badGuy.getHP() < 0){
-        printUserHP = 0;
-    }
+        }
+	    //讓使用者的血量不會是負的
+        int printUserHP = user.getHP();
+        if(badGuy.getHP() < 0){
+            printUserHP = 0;
+        }
 
 
-	System.out.println("我方剩餘血量" + printUserHP + "管　　　敵方剩餘血量" + printBossHP + "管");
-	System.out.println("------------------------------"); //30個斜線
-}
+	    System.out.println("我方剩餘血量" + printUserHP + "管　　　敵方剩餘血量" + printBossHP + "管");
+	    System.out.println("------------------------------"); //30個斜線
+    }
 
     public static void main(String[] args){
         //建立物件之夥伴
         Friend[] friendList;
         friendList = new Friend[3];
-        friendList = getFriendCharacterInfo("friendListFile.txt");   
+        friendList = getFriendCharacterInfo("friendListFile.txt");
 
         //建立物件之魔王
         Boss[] bossList;
         bossList = new Boss[3];
         bossList = getBossCharacterInfo("bossListFile.txt");
 
-        Item[] itemList;
-        itemList = new Item[6];
-        itemList = getItemCharacterInfo("itemListFile.txt");
-        
+        //建立物件之道具
+        HealItem[] healItemList;
+        DamageItem[] damageItemList;
+        healItemList = new HealItem[3];
+        damageItemList = new DamageItem[3];
+        healItemList = getHealItemCharacterInfo("healItemListFile.txt");
+        damageItemList = getDamageItemCharacterInfo("damageItemListFile.txt");
+
         Scanner scn = new Scanner(System.in);
         System.out.println("角色列表 \n1 " + friendList[0].getName() + " " + friendList[0].getIntroduceWord() + " / 2 " + friendList[1].getName() + " " + friendList[1].getIntroduceWord() + " / 3 " + friendList[2].getName() + " " + friendList[2].getIntroduceWord());
         System.out.println("要看角色數值嗎？　1 要 / 2 不要");
@@ -579,6 +611,17 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         int chooseBoss = scn.nextInt();
         Boss badGuy = bossList[chooseBoss-1];
 
+        //抽道具
+        System.out.println("抽道具");
+        Item pulledItem;
+        if (Math.random() <= 0.5){
+            pulledItem = gachaHealItem(user, healItemList);
+        }
+        else{
+            pulledItem = gachaDamageItem(user, damageItemList);
+        }
+        pulledItem.showInfo();
+
         //戰鬥開始
         System.out.println("玩家：你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！");
         gameCharacterDialogueBossBeChosen(badGuy); //氣氛組之魔王被選臺詞
@@ -590,7 +633,7 @@ public static void roundEnd(int round, Boss badGuy, Friend user) {
         while(true){
             if(user.getHP()>0 && badGuy.getHP()>0){
                 round += 1; // 回合計次
-                fighting(badGuy, user, scn);
+                fighting(badGuy, user, pulledItem, scn);
                 roundEnd(round, badGuy, user);
             }
             else if(user.getHP()>0 && badGuy.getHP()<=0){

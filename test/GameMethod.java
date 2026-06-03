@@ -7,7 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameMethod {
+public class GameMethod{
     public static Friend[] getFriendCharacterInfo(String friendListFile){
         List<Friend> friendList = new ArrayList<>();
 
@@ -245,21 +245,23 @@ public class GameMethod {
     System.out.println("敵方攻擊" + badGuy.getAttack() + "點傷害");
 }
 
-public static void roundEnd(int round, Boss badGuy, Friend user) {
-	System.out.println("\n第" + round + "回合戰況");
+    public static void roundEnd(int round, Boss badGuy, Friend user) {
+	    System.out.println("\n第" + round + "回合戰況");
 
     //讓魔王的血量不會是負的
-    int printBossHP = badGuy.getHP();
-    if(badGuy.getHP() < 0){
-        printBossHP = 0;
-    }
+        int printBossHP = badGuy.getHP();
+        if(badGuy.getHP() < 0){
+            printBossHP = 0;
+        }
 	//讓使用者的血量不會是負的
-    int printUserHP = user.getHP();
-    if(badGuy.getHP() < 0){
-        printUserHP = 0;
+        int printUserHP = user.getHP();
+        if(badGuy.getHP() < 0){
+            printUserHP = 0;
+        }
+
+
+	    System.out.println("我方剩餘血量" + printUserHP + "管　　　敵方剩餘血量" + printBossHP + "管");
+	    System.out.println("------------------------------"); //30個斜線
+
     }
-
-
-	System.out.println("我方剩餘血量" + printUserHP + "管　　　敵方剩餘血量" + printBossHP + "管");
-	System.out.println("------------------------------"); //30個斜線
 }

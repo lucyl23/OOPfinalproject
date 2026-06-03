@@ -3,7 +3,7 @@ import javax.swing.JPanel;
 import java.awt.CardLayout;
 import javax.swing.ImageIcon; 
 
-// GameFrame 繼承 JFrame 
+// GameFrame 繼承 JFrame
 public class GameFrame extends JFrame {
     
      // 宣告 CardLayout 與一個主容器，用來管理並抽換不同的子畫面

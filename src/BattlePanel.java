@@ -114,7 +114,7 @@ public class BattlePanel extends JPanel {
                     DamageItem dItem = (DamageItem) activeItem;
                     if (dItem.getATKTimes() > 0) {
                         boss.beAttack(user.getAttack());
-                        appendLog("道具連擊！" + dItem.getName() + " 發動，追加 " + user.getAttack() + " 點傷害！");
+                        appendLog(dItem.getName() + " ，再造成 " + user.getAttack() + " 點傷害！");
                         flashImage(bossImageLabel, bossDefaultColor, Color.RED);
                     }
                 }

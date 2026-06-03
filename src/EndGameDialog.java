@@ -51,9 +51,9 @@ public class EndGameDialog extends JDialog {
         // 根據勝負填入對應的劇情台詞
         if (isWin) {
             // 呼叫你在 Boss 類別中寫好的死亡台詞
-            textArea.setText(boss.getName() + "：「" + boss.getgameCharacterDialogueDie() + "」\n\n系統：你是真的太強了。");
+            textArea.setText(boss.getName() + "：「" + boss.getgameCharacterDialogueDie() + "」\n系統：你是真的太強了。\n\n\n系統：戰鬥結束\n「啊～又是這個夢。」");
         } else {
-            textArea.setText("系統：勝敗乃兵家常事，大俠請重新來過。\n\n「啊～又是這個夢。」");
+            textArea.setText("YOU DIED\n系統：勝敗乃兵家常事，大俠請重新來過。\n\n\n系統：戰鬥結束\n「啊～又是這個夢。」");
         }
         add(textArea, BorderLayout.CENTER);
 

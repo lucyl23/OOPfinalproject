@@ -17,7 +17,7 @@ public class GachaDialog extends JDialog {
         setLocationRelativeTo(parent);
         setLayout(new BorderLayout(10, 10));
 
-        // 讀取道具資料 (呼叫你原本寫在 FIGHT0528 裡面的靜態方法)
+        // 讀取道具資料 
         healItemList = GameMethod.getHealItemCharacterInfo("healItemListFile.txt");
         damageItemList = GameMethod.getDamageItemCharacterInfo("damageItemListFile.txt");
 
@@ -81,7 +81,7 @@ public class GachaDialog extends JDialog {
 
                 if (isReviveItem) {
                     user.setRespawnItem(pulledItem);
-                    descArea.append("\n\n★ 此道具已裝備，將在你倒下時自動發動！");
+                    descArea.append("\n\n此道具已裝備，將在你倒下時自動發動！");
                 } else {
                     pulledItem.useItem(user, boss);
                     descArea.append("\n\n道具效果已發動！");

@@ -74,12 +74,13 @@ class Character{
 
 class Friend extends Character{
     private int luck;
-    private int onceheal = 100;
+    private int onceheal = 150;
     private int healTimes = 2;
     private int ultCounter;
     private final int fullUltCounter;
     private int fullHP;
     private int powerPoints;
+    private Item respawnItem;
     Friend(String name, String introduceWord, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints, String CharacterDialogueBeChosen, String CharacterDialogueAttack1, String CharacterDialogueAttack2){
         super(name, introduceWord, HP, ATK, UltATK, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2);
         this.luck = luck;
@@ -134,6 +135,15 @@ class Friend extends Character{
     }
     int getPowerPoints(){
         return this.powerPoints;
+    }
+    void setRespawnItem(Item pulledItem){
+        this.respawnItem = pulledItem;
+    }
+    Item getRespawnItem(){
+        return this.respawnItem;
+    }
+    boolean haveRespawnItem(){
+        return this.respawnItem != null;
     }
 }
 
@@ -416,40 +426,22 @@ public class FIGHT0528 {
     }
     public static void setCharacterValues(Friend user, Scanner scn){
         //設定角色數值
-        System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊與閃避）\n你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
+        System.out.println("分配你的實打實攻擊力和幸運值（關乎爆擊）\n你有" + user.getPowerPoints() + "點可以分配，輸入你要分配多少給攻擊力，剩下就是幸運值");
         //這邊可以加上下限限制的if-else
         int plusATK = scn.nextInt();
         user.setLuck(user.getPowerPoints() - plusATK);
         user.setATK(user.getAttack() + plusATK);
     }
 
-    public static HealItem gachaHealItem(Friend user, HealItem[] healItemList){
-        HealItem pulledItem;
-        double dropRate = 1/healItemList.length;
-        if(Math.random() <= dropRate*1){
-            pulledItem = healItemList[0];
+    public static Item gachaItem(Item[] itemList){
+        double dropRate = 1.0/itemList.length;
+        double roll = Math.random();
+        for(int i = 0; i < itemList.length; i++){
+            if(roll <= dropRate*(i+1)){
+                return itemList[i];
+            }
         }
-        else if(Math.random() > dropRate*1 && Math.random() <= dropRate*2){
-            pulledItem = healItemList[1];
-        }
-        else{
-            pulledItem = healItemList[2];
-        }
-        return pulledItem;
-    }
-    public static DamageItem gachaDamageItem(Friend user, DamageItem[] damageItemList){
-        DamageItem pulledItem;
-        double dropRate = 1/damageItemList.length;
-        if(Math.random() <= dropRate*1){
-            pulledItem = damageItemList[0];
-        }
-        else if(Math.random() > dropRate*1 && Math.random() <= dropRate*2){
-            pulledItem = damageItemList[1];
-        }
-        else{
-            pulledItem = damageItemList[2];
-        }
-        return pulledItem;
+        return itemList[itemList.length - 1];
     }
 
     public static void fighting(Boss badGuy, Friend user, Item pulledItem, Scanner scn){
@@ -469,14 +461,17 @@ public class FIGHT0528 {
         }
         else{
             double critChance = user.getLuck()/100.0;
-            if(Math.random() < critChance){ //有爆擊
+            if(Math.random() < critChance*0.8){ //有爆擊
                 System.out.println("爆擊！！");
                 long critATK = Math.round(user.getAttack()*4); //round的回傳型態是long
-                badGuy.beAttack((int)critATK*10); //強制轉型
+                badGuy.beAttack((int)critATK); //強制轉型
+                System.out.println("我方攻擊" + critATK + "點傷害！！");
             }
-            badGuy.beAttack(user.getAttack());
+            else{
+                badGuy.beAttack(user.getAttack());
+                System.out.println("我方攻擊" + user.getAttack() + "點傷害");
+            }
             user.cutUltCounter();
-            System.out.println("我方攻擊" + user.getAttack() + "點傷害");
             System.out.println("再" + user.getUltCounter() + "次攻擊後會釋放大招\n");
         }
     }
@@ -493,7 +488,7 @@ public class FIGHT0528 {
             System.out.println("還剩下" + user.getHealTimes() + "瓶靈魂瓶");
         }
         else{
-            System.out.println("你的靈魂瓶已用完，怎麼忘記了，下去。");
+            System.out.println("你的靈魂瓶已用完，你怎麼忘記了，下去。");
         }
         }
     //badGuy回合開始
@@ -518,7 +513,7 @@ public class FIGHT0528 {
         }
 
 
-	    System.out.println("我方剩餘血量" + printUserHP + "管　　　敵方剩餘血量" + printBossHP + "管");
+	    System.out.println("我方剩餘血量" + printUserHP + "管　　　敵方剩餘血量" + printBossHP + "管　　　我方剩餘" + user.getHealTimes() + "瓶靈魂瓶");
 	    System.out.println("------------------------------"); //30個斜線
     }
 
@@ -567,17 +562,35 @@ public class FIGHT0528 {
         System.out.println("請輸入編號選擇攻略魔王！");
         int chooseBoss = scn.nextInt();
         Boss badGuy = bossList[chooseBoss-1];
+        System.out.println("你選擇的是" + badGuy.getName());
+        System.out.println(badGuy.getName() + "：" + badGuy.getgameCharacterDialogueBeChosen() + "\n");
 
         //道具
-        System.out.println("抽道具");
+        System.out.println("抽道具環節");
         Item pulledItem;
         if (Math.random() <= 0.5){
-            pulledItem = gachaHealItem(user, healItemList);
+            pulledItem = gachaItem(healItemList);
         }
         else{
-            pulledItem = gachaDamageItem(user, damageItemList);
+            pulledItem = gachaItem(damageItemList);
         }
         pulledItem.showInfo();
+
+        boolean isReviveItem = false;
+        if (pulledItem instanceof HealItem) {
+            HealItem tempItem = (HealItem) pulledItem; //tempItem temporary暫時的
+            if (tempItem.getFullyRecovered() == true) {
+                isReviveItem = true;
+            }
+        }
+
+        if(isReviveItem){
+            user.setRespawnItem(pulledItem);
+            System.out.println("這道具等你死掉會自動發動");
+        }
+        else{
+            pulledItem.useItem(user, badGuy);
+        }
 
         //戰鬥開始
         System.out.println("玩家：你就是" + badGuy.getName() + "嗎？！我來找你打架了！納命來！！！");
@@ -585,7 +598,6 @@ public class FIGHT0528 {
         System.out.println("：開始戰鬥吧！");
         System.out.println("==============================");
         int round = 0;  // 回合初設
-        pulledItem.useItem(user, badGuy);
         //回合中
         while(true){
             if(user.getHP()>0 && badGuy.getHP()>0){
@@ -607,6 +619,13 @@ public class FIGHT0528 {
                 }
             }
             else if(user.getHP()<=0 && badGuy.getHP()>0){
+
+                if (user.haveRespawnItem()) {
+                    System.out.println("在Uber Eats上點得到 眼罩 眼影 眼線筆 但點不到一秒落淚的演技\nUber Eats（應該）都點得到");
+                    user.getRespawnItem().useItem(user, badGuy);
+                    user.setRespawnItem(null); // 消耗掉道具，避免無限復活
+                    continue; // 回到迴圈開頭，繼續戰鬥！
+        }
                 System.out.println("YOU DIED");
                 break;
             }

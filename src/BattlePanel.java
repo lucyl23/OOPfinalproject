@@ -64,6 +64,10 @@ public class BattlePanel extends JPanel {
         
         appendLog("戰鬥開始！" + user.getName() + " VS " + boss.getName());
 
+        // 【新增】雙方被選中時的登場台詞
+        appendLog(user.getName() + "：" + user.getgameCharacterDialogueBeChosen());
+        appendLog(boss.getName() + "：" + boss.getgameCharacterDialogueBeChosen());
+        appendLog("======================================");
         // 操作按鈕區
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 30, 10));
         attackBtn = new JButton();
@@ -100,7 +104,7 @@ public class BattlePanel extends JPanel {
                 } else {
                     // 【普通攻擊】
                     boss.beAttack(user.getAttack());
-                    appendLog("▶ 我方攻擊！對 " + boss.getName() + " 造成 " + user.getAttack() + " 點傷害。");
+                    appendLog("我方攻擊！對 " + boss.getName() + " 造成 " + user.getAttack() + " 點傷害。");
                     
                     // 普通攻擊維持原本的閃紅特效
                     flashImage(bossImageLabel, bossDefaultColor, Color.RED);
@@ -110,7 +114,7 @@ public class BattlePanel extends JPanel {
                     DamageItem dItem = (DamageItem) activeItem;
                     if (dItem.getATKTimes() > 0) {
                         boss.beAttack(user.getAttack());
-                        appendLog("🗡️ 道具連擊！" + dItem.getName() + " 發動，追加 " + user.getAttack() + " 點傷害！");
+                        appendLog("道具連擊！" + dItem.getName() + " 發動，追加 " + user.getAttack() + " 點傷害！");
                         flashImage(bossImageLabel, bossDefaultColor, Color.RED);
                     }
                 }
@@ -179,7 +183,15 @@ public class BattlePanel extends JPanel {
         ultImageLabel.setForeground(Color.YELLOW);
         ultImageLabel.setFont(new Font("微軟正黑體", Font.BOLD, 36));
         
-        JLabel ultTextLabel = new JLabel("「釋放大招！！！！」", SwingConstants.CENTER);
+        // 【修改】隨機使用大招台詞 1 或是台詞 2
+        String ultSpeech;
+        if (Math.random() <= 0.5) {
+            ultSpeech = user.getgameCharacterDialogueAttack1();
+        } else {
+            ultSpeech = user.getgameCharacterDialogueAttack2();
+        }
+
+        JLabel ultTextLabel = new JLabel("「" + ultSpeech + "」", SwingConstants.CENTER);
         ultTextLabel.setFont(new Font("微軟正黑體", Font.BOLD, 24));
         ultTextLabel.setOpaque(true);
         ultTextLabel.setBackground(Color.BLACK);
@@ -256,7 +268,7 @@ public class BattlePanel extends JPanel {
             DamageItem dItem = (DamageItem) activeItem;
             if (dItem.getAddCurse() > 0) {
                 boss.beAttack(dItem.getAddCurse());
-                appendLog("☠️ 詛咒發作！敵人失去 " + dItem.getAddCurse() + " 點血量。");
+                appendLog("詛咒發作！敵人失去 " + dItem.getAddCurse() + " 點血量。");
                 // 用紫色閃爍代表中毒/詛咒
                 flashImage(bossImageLabel, bossDefaultColor, new Color(148, 0, 211)); 
             }
@@ -268,23 +280,31 @@ public class BattlePanel extends JPanel {
                 // 觸發復活機制
                 boss.fullyRecovered(); // 呼叫你的復活方法[cite: 4]
                 updateHpUI();
-                appendLog("⚠️ 警告！" + boss.getName() + " 觸發了二階復活！血量恢復至滿血！");
+                appendLog("警告！" + boss.getName() + " 觸發了二階復活！血量恢復至滿血！");
                 JOptionPane.showMessageDialog(this, "系統：你以為這種小遊戲大魔王不會有二階嗎？哈哈哈你還是太嫩了！");
                 // 魔王復活後回合繼續，讓他有機會反擊
             } else {
                 // 真正死亡
                 updateHpUI();
-                appendLog("🏆 戰鬥結束！你成功擊敗了 " + boss.getName() + "！");
+                appendLog("戰鬥結束！你成功擊敗了 " + boss.getName() + "！");
                 appendLog(boss.getName() + "：" + boss.getgameCharacterDialogueDie()); // 顯示遺言[cite: 4]
                 disableAllButtons();
+                // 【修改】延遲 1 秒後，跳出勝利的無邊框結局視窗 (讓玩家有時間看清楚血條歸零)
+                Timer winTimer = new Timer(1000, e -> new EndGameDialog(parentFrame, true, boss).setVisible(true));
+                winTimer.setRepeats(false);
+                winTimer.start();
                 return;
             }
         }
 
         // 3. 敵方反擊
+        // 隨機選用 Boss 的攻擊台詞
+        String bossSpeech = (Math.random() <= 0.5) ? boss.getgameCharacterDialogueAttack1() : boss.getgameCharacterDialogueAttack2();
+        appendLog(boss.getName() + "：「" + bossSpeech + "」");
+
         user.beAttack(boss.getAttack());
         updateHpUI();
-        appendLog("◀ 敵方反擊！" + boss.getName() + " 對你造成 " + boss.getAttack() + " 點傷害。");
+        appendLog("敵方反擊！" + boss.getName() + " 對你造成 " + boss.getAttack() + " 點傷害。");
         flashImage(userImageLabel, userDefaultColor, Color.RED);
 
         // 4. 檢查我方是否死亡與【我方道具復活】
@@ -294,13 +314,18 @@ public class BattlePanel extends JPanel {
                 user.getRespawnItem().useItem(user, boss);
                 user.setRespawnItem(null); // 消耗掉道具[cite: 4]
                 updateHpUI();
-                appendLog("👼 復活道具發動！" + user.getName() + " 滿血復活啦！");
+                appendLog("復活道具發動！" + user.getName() + " 滿血復活啦！");
                 JOptionPane.showMessageDialog(this, "在Uber Eats上點得到 眼罩 眼影 眼線筆 但點不到一秒落淚的演技\nUber Eats（應該）都點得到");
             } else {
                 // 真正死亡
                 updateHpUI();
-                appendLog("💀 YOU DIED... 戰鬥失敗。");
+                appendLog("YOU DIED... 戰鬥失敗。");
                 disableAllButtons();
+            
+                // 【修改】延遲 1 秒後，跳出失敗的無邊框結局視窗
+                Timer loseTimer = new Timer(1000, e -> new EndGameDialog(parentFrame, false, boss).setVisible(true));
+                loseTimer.setRepeats(false);
+                loseTimer.start(); 
                 return;
             }
         }
@@ -308,7 +333,7 @@ public class BattlePanel extends JPanel {
         // 回合結束，更新按鈕狀態
         updateButtonsState();
     }
-    
+
     // ==========================================
     // UI 更新小工具
     // ==========================================

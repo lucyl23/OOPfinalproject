@@ -177,12 +177,26 @@ public class BattlePanel extends JPanel {
         ultDialog.setLayout(new BorderLayout());
 
         // 滿版大招圖片與文字設定
-        JLabel ultImageLabel = new JLabel("【" + user.getName() + " 大招滿版圖片】", SwingConstants.CENTER);
+        JLabel ultImageLabel = new JLabel();
+        ultImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         ultImageLabel.setOpaque(true);
         ultImageLabel.setBackground(Color.BLACK);
         ultImageLabel.setForeground(Color.YELLOW);
         ultImageLabel.setFont(new Font("微軟正黑體", Font.BOLD, 36));
         
+        ImageIcon ultIcon = parentFrame.loadAndScaleImage("/images/" + user.getName() + "_ult.jpg", 600, 320);
+
+        // 3. 判斷圖片是否有成功讀取
+        if (ultIcon != null) {
+            // 如果有找到圖片，就把圖片塞進去！
+            ultImageLabel.setIcon(ultIcon);
+        } else {
+            // 如果找不到圖片，就啟動防呆機制：顯示原本你寫的黃色備用文字
+            ultImageLabel.setText("【" + user.getName() + " 大招滿版圖片】");
+            ultImageLabel.setForeground(Color.YELLOW);
+            ultImageLabel.setFont(new Font("微軟正黑體", Font.BOLD, 36));
+        }
+
         // 【修改】隨機使用大招台詞 1 或是台詞 2
         String ultSpeech;
         if (Math.random() <= 0.5) {
@@ -231,19 +245,13 @@ public class BattlePanel extends JPanel {
     }
 
     private void flashImage(JLabel label, Color defaultColor, Color flashColor) {
-        // 先記住原本身上的圖片是什麼
-        Icon originalIcon = label.getIcon(); 
         
-        // label.setIcon(null); // 暫時把圖片拿掉
         label.setBackground(flashColor); // 顯示受傷顏色
-        // label.setText(flashColor == Color.RED ? "受到攻擊！" : "回復！"); // 顯示提示字
 
         Timer timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 label.setBackground(defaultColor); // 1秒後恢復原色
-                label.setText("");                 // 清空文字
-                label.setIcon(originalIcon);       // 【關鍵】把原本的圖片裝回去！
             }
         });
         timer.setRepeats(false);
@@ -304,7 +312,7 @@ public class BattlePanel extends JPanel {
 
         user.beAttack(boss.getAttack());
         updateHpUI();
-        appendLog("敵方反擊！" + boss.getName() + " 對你造成 " + boss.getAttack() + " 點傷害。");
+        appendLog("敵方反擊！" + boss.getName() + " 對你造成 " + boss.getAttack() + " 點傷害。\n");
         flashImage(userImageLabel, userDefaultColor, Color.RED);
 
         // 4. 檢查我方是否死亡與【我方道具復活】
@@ -389,7 +397,7 @@ public class BattlePanel extends JPanel {
         imageLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
         // 【新增】載入戰鬥圖片 (設定為 200x300 大小)
-        ImageIcon icon = parentFrame.loadAndScaleImage("/images/" + name + ".jpg", 200, 300);
+        ImageIcon icon = parentFrame.loadAndScaleImage("/images/" + name + ".jpg", 300, 250);
         imageLabel.setIcon(icon);
 
         panel.add(imageLabel, BorderLayout.CENTER);

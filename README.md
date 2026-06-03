@@ -7,5 +7,6 @@
 ## for 一些基本資訊(駝峰命名法)<br>
 如何下載來玩？<br>
 src檔+所有txt檔(要和src同一層，不要在src裡面)<br>
+https://lucyl23.github.io/OOPfinalproject/<br>
 ## 如何執行<br>
 ## 物件導向概念使用<br>

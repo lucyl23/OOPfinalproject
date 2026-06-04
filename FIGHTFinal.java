@@ -81,7 +81,6 @@ class Friend extends Character{
     private int fullHP;
     private int powerPoints;
     private Item respawnItem;
-	
     Friend(String name, String introduceWord, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints, String CharacterDialogueBeChosen, String CharacterDialogueAttack1, String CharacterDialogueAttack2){
         super(name, introduceWord, HP, ATK, UltATK, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2);
         this.luck = luck;
@@ -145,6 +144,9 @@ class Friend extends Character{
     }
     boolean haveRespawnItem(){
         return this.respawnItem != null;
+    }
+    void setFullHP(int fullHP){
+        this.fullHP = fullHP;
     }
 }
 
@@ -238,8 +240,9 @@ class HealItem extends Item {
         } 
 		
 		if (this.addHP > 0) {
-            user.setHP(user.getHP() + this.getAddHP());
-            System.out.println("血量最大值增加了 " + this.getAddHP() + " 管！(現為 " + user.getHP() + " 管血量)");
+            user.setFullHP(user.getHP() + this.getAddHP());
+            user.setHP(user.getFullHP());
+            System.out.println("血量最大值增加了 " + this.getAddHP() + " 管！(現為 " + user.getFullHP() + " 管血量)");
         }
 		
         if (this.addHealTimes > 0) {
@@ -499,7 +502,7 @@ public class FIGHTFinal {
             System.out.println("再" + user.getUltCounter() + "次攻擊後會釋放大招\n");
         }
     }
-    if(move.equals("2")){ //回血
+    else if(move.equals("2")){ //回血
         if(user.getHealTimes()>0){
             user.heal();
             if(user.getHP() > user.getFullHP()){ //血量上限
@@ -532,11 +535,11 @@ public class FIGHTFinal {
         //讓魔王的血量不會是負的
         int printBossHP = badGuy.getHP();
             if(badGuy.getHP() < 0){
-        printBossHP = 0;
+                printBossHP = 0;
         }
 	    //讓使用者的血量不會是負的
         int printUserHP = user.getHP();
-        if(badGuy.getHP() < 0){
+        if(user.getHP() < 0){
             printUserHP = 0;
         }
 
@@ -667,12 +670,12 @@ public class FIGHTFinal {
         int round = 0;  // 回合初設
         //回合中
         while(true){
-            if(user.getHP()>0 && badGuy.getHP()>0){
+            if(user.getHP() > 0 && badGuy.getHP() > 0){
                 round += 1; // 回合計次
                 fighting(badGuy, user, scn);
                 roundEnd(round, badGuy, user);
             }
-            else if(user.getHP()>0 && badGuy.getHP()<=0){
+            else if(user.getHP() > 0 && badGuy.getHP() <= 0){
                 if (badGuy.getFullyRecoveredTimes()>0){
                     System.out.println("系統：你以為這種小遊戲大魔王不會有二階嗎？哈哈哈你還是太嫩了！");
                     badGuy.fullyRecovered();
@@ -682,10 +685,13 @@ public class FIGHTFinal {
                 else{
                     gameCharacterDialogueBossDie(badGuy); //氣氛組之魔王死掉臺詞
                     System.out.println("系統：你是真的太強了。");
-                    break;
+                    if(user.getName().equals("爆豪勝己") && badGuy.getName().equals("All For One")){
+                    System.out.println("爆豪勝己：我贏了！！！！哈哈哈哈哈哈！（狂笑）");
+                }
+                break;
                 }
             }
-            else if(user.getHP()<=0 && badGuy.getHP()>0){
+            else if(user.getHP() <= 0 && badGuy.getHP() >= 0){
 
                 if (user.haveRespawnItem()) {
                     System.out.println("在Uber Eats上點得到 眼罩 眼影 眼線筆 但點不到一秒落淚的演技\nUber Eats（應該）都點得到");
@@ -694,27 +700,41 @@ public class FIGHTFinal {
                     continue; // 回到迴圈開頭，繼續戰鬥！
         }
                 System.out.println("YOU DIED");
+                if(user.getName().equals("爆豪勝己") && badGuy.getName().equals("All For One")){
+                    System.out.println("All For One：你的個性很棒，我要了。");
+                }
                 break;
             }
-            else if(user.getHP()<=0 && badGuy.getHP()<0){
-                if (user.haveRespawnItem()) {
+            else if(user.getHP() <= 0 && badGuy.getHP() <= 0){
+                if (user.haveRespawnItem() == true && badGuy.getFullyRecoveredTimes() > 0) { //都復活
                     System.out.println("在Uber Eats上點得到 眼罩 眼影 眼線筆 但點不到一秒落淚的演技\nUber Eats（應該）都點得到");
                     user.getRespawnItem().useItem(user, badGuy);
                     user.setRespawnItem(null);
-                }
-                if (badGuy.getFullyRecoveredTimes()>0){
+
                     System.out.println("系統：你以為這種小遊戲大魔王不會有二階嗎？哈哈哈你還是太嫩了！");
                     badGuy.fullyRecovered();
                     System.out.println("魔王血量：" + badGuy.getHP());
                     badGuy.cutFullyRecoveredTimes();
+                }
+                else if (user.haveRespawnItem() == false && badGuy.getFullyRecoveredTimes() > 0){ //玩家沒有復活魔王有 玩家敗
+                    System.out.println(badGuy.getName() + "復活啦！但你沒有你太菜了　YOU DIED");
+                    if(user.getName().equals("爆豪勝己") && badGuy.getName().equals("All For One")){
+                        System.out.println("All For One：你的個性很棒，我要了。");
                     }
-                else{
-                    gameCharacterDialogueBossDie(badGuy); //氣氛組之魔王死掉臺詞
-                    System.out.println("系統：你是真的太強了。");
                     break;
                 }
-                System.out.println("兩敗俱傷");
-                break;
+                else if (user.haveRespawnItem() == true && badGuy.getFullyRecoveredTimes() == 0){ //玩家有復活魔王沒有 魔王敗
+                    gameCharacterDialogueBossDie(badGuy); //氣氛組之魔王死掉臺詞
+                    System.out.println("系統：你是真的太強了。竟然可以透過道具復活，在這麼激烈的戰鬥中存活下來。");
+                    if(user.getName().equals("爆豪勝己") && badGuy.getName().equals("All For One")){
+                        System.out.println("爆豪勝己：我贏了！！！！哈哈哈哈哈哈！（狂笑）");
+                    }
+                    break;
+                }
+                else{//都沒有 兩敗俱傷
+                    System.out.println("兩敗俱傷");
+                    break;
+                }
             }
         }
         //戰鬥結束

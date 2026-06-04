@@ -81,6 +81,7 @@ class Friend extends Character{
     private int fullHP;
     private int powerPoints;
     private Item respawnItem;
+	
     Friend(String name, String introduceWord, int HP, int ATK, int UltATK, int luck, int healTimes, int ultCounter, int powerPoints, String CharacterDialogueBeChosen, String CharacterDialogueAttack1, String CharacterDialogueAttack2){
         super(name, introduceWord, HP, ATK, UltATK, CharacterDialogueBeChosen, CharacterDialogueAttack1, CharacterDialogueAttack2);
         this.luck = luck;

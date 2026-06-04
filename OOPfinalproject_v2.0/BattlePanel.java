@@ -184,7 +184,7 @@ public class BattlePanel extends JPanel {
         ultImageLabel.setForeground(Color.YELLOW);
         ultImageLabel.setFont(new Font("微軟正黑體", Font.BOLD, 36));
         
-        ImageIcon ultIcon = parentFrame.loadAndScaleImage(user.getName() + "_ult.jpg", 600, 320);
+        ImageIcon ultIcon = parentFrame.loadAndScaleImage("/" + user.getName() + "_ult.jpg", 600, 320);
 
         // 3. 判斷圖片是否有成功讀取
         if (ultIcon != null) {
@@ -397,7 +397,7 @@ public class BattlePanel extends JPanel {
         imageLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         
         // 【新增】載入戰鬥圖片 (設定為 200x300 大小)
-        ImageIcon icon = parentFrame.loadAndScaleImage(name + ".jpg", 300, 250);
+        ImageIcon icon = parentFrame.loadAndScaleImage("/" + name + ".jpg", 300, 250);
         imageLabel.setIcon(icon);
 
         panel.add(imageLabel, BorderLayout.CENTER);

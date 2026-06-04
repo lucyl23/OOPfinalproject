@@ -177,7 +177,7 @@ public class SelectPanel extends JPanel {
             heroImageLabel.setText(""); // 清空原本的「圖片顯示區」文字
             // 呼叫我們剛寫好的共用工具，設定要縮放成 150x180 大小 (跟原本的佔位區塊一樣大)
             // 假設你的圖片都是 jpg 格式
-            ImageIcon icon = parentFrame.loadAndScaleImage("F" + index + "_select.jpg", 200, 300);
+            ImageIcon icon = parentFrame.loadAndScaleImage("/F" + index + "_select.jpg", 200, 300);
             heroImageLabel.setIcon(icon);
         }
     }
@@ -194,7 +194,7 @@ public class SelectPanel extends JPanel {
             bossInfoArea.setText(info);
             // 【圖片修改重點】
             bossImageLabel.setText("");
-            ImageIcon icon = parentFrame.loadAndScaleImage("B" + index + "_select.jpg", 200, 300);
+            ImageIcon icon = parentFrame.loadAndScaleImage("/B" + index + "_select.jpg", 200, 300);
             bossImageLabel.setIcon(icon);
         }
     }

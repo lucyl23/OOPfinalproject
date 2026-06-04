@@ -1,15 +1,36 @@
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class GameMethod{
     public static Friend[] getFriendCharacterInfo(String friendListFile){
         List<Friend> friendList = new ArrayList<>();
         try{
-            List<String> lines = Files.readAllLines(Paths.get(friendListFile), StandardCharsets.UTF_8);
+            // 1. 建立一個空的 List，準備用來裝每一行的文字
+            List<String> lines = new ArrayList<>();
+    
+            // 2. 使用 getResourceAsStream 從 JAR 內部讀取檔案 (記得檔名前面加上 "/")
+            java.io.InputStream is = GameMethod.class.getResourceAsStream("/" + friendListFile);
+    
+            // 3. 確保檔案有順利找到
+            if (is != null) {
+                // 這裡就是我之前提到的 BufferedReader，我們用它把 InputStream 轉成文字一行行讀出來
+                java.io.BufferedReader br = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(is, StandardCharsets.UTF_8)
+                );
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lines.add(line);
+                }
+                br.close();
+            } else {
+                System.out.println("系統找不到檔案：" + friendListFile);
+            }
+
+            // ==========================================
+            // 底下的程式碼完全不用動！它會無縫接軌繼續執行
+            // ==========================================
             for (int i = 2; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(",");
 
@@ -37,7 +58,30 @@ public class GameMethod{
     public static Boss[] getBossCharacterInfo(String bossListFile){
         List<Boss> bossList = new ArrayList<>();
         try{
-            List<String> lines = Files.readAllLines(Paths.get(bossListFile), StandardCharsets.UTF_8);
+            // 1. 建立一個空的 List，準備用來裝每一行的文字
+            List<String> lines = new ArrayList<>();
+    
+            // 2. 使用 getResourceAsStream 從 JAR 內部讀取檔案 (記得檔名前面加上 "/")
+            java.io.InputStream is = GameMethod.class.getResourceAsStream("/" + bossListFile);
+    
+            // 3. 確保檔案有順利找到
+            if (is != null) {
+                // 這裡就是我之前提到的 BufferedReader，我們用它把 InputStream 轉成文字一行行讀出來
+                java.io.BufferedReader br = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(is, StandardCharsets.UTF_8)
+                );
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lines.add(line);
+                }
+                br.close();
+            } else {
+                System.out.println("系統找不到檔案：" + bossListFile);
+            }
+
+            // ==========================================
+            // 底下的程式碼完全不用動！它會無縫接軌繼續執行
+            // ==========================================
             for (int i = 2; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(",");
 
@@ -62,7 +106,30 @@ public class GameMethod{
     public static HealItem[] getHealItemCharacterInfo(String healItemListFile){
         List<Item> healItemList = new ArrayList<>();
         try{
-            List<String> lines = Files.readAllLines(Paths.get(healItemListFile), StandardCharsets.UTF_8);
+            // 1. 建立一個空的 List，準備用來裝每一行的文字
+            List<String> lines = new ArrayList<>();
+    
+            // 2. 使用 getResourceAsStream 從 JAR 內部讀取檔案 (記得檔名前面加上 "/")
+            java.io.InputStream is = GameMethod.class.getResourceAsStream("/" + healItemListFile);
+    
+            // 3. 確保檔案有順利找到
+            if (is != null) {
+                // 這裡就是我之前提到的 BufferedReader，我們用它把 InputStream 轉成文字一行行讀出來
+                java.io.BufferedReader br = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(is, StandardCharsets.UTF_8)
+                );
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lines.add(line);
+                }
+                br.close();
+            } else {
+                System.out.println("系統找不到檔案：" + healItemListFile);
+            }
+
+            // ==========================================
+            // 底下的程式碼完全不用動！它會無縫接軌繼續執行
+            // ==========================================
             for (int i = 2; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(",");
 
@@ -83,7 +150,30 @@ public class GameMethod{
         List<Item> damageItemList = new ArrayList<>();
 
         try{
-            List<String> lines = Files.readAllLines(Paths.get(damageItemListFile), StandardCharsets.UTF_8);
+            // 1. 建立一個空的 List，準備用來裝每一行的文字
+            List<String> lines = new ArrayList<>();
+    
+            // 2. 使用 getResourceAsStream 從 JAR 內部讀取檔案 (記得檔名前面加上 "/")
+            java.io.InputStream is = GameMethod.class.getResourceAsStream("/" + damageItemListFile);
+    
+            // 3. 確保檔案有順利找到
+            if (is != null) {
+                // 這裡就是我之前提到的 BufferedReader，我們用它把 InputStream 轉成文字一行行讀出來
+                java.io.BufferedReader br = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(is, StandardCharsets.UTF_8)
+                );
+                String line;
+                while ((line = br.readLine()) != null) {
+                    lines.add(line);
+                }
+                br.close();
+            } else {
+                System.out.println("系統找不到檔案：" + damageItemListFile);
+            }
+
+            // ==========================================
+            // 底下的程式碼完全不用動！它會無縫接軌繼續執行
+            // ==========================================
             for (int i = 2; i < lines.size(); i++) {
                 String[] parts = lines.get(i).split(",");
                 String name = parts[0];

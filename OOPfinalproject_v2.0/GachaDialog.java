@@ -63,7 +63,7 @@ public class GachaDialog extends JDialog {
                 descArea.setText("【" + pulledItem.getName() + "】\n" + pulledItem.getIntroduceWord());
                 
                 // 載入道具圖片 (記得在 images 資料夾放入與道具同名的圖片，例如 "蘋果.jpg")
-                ImageIcon icon = parent.loadAndScaleImage(pulledItem.getName() + ".jpg", 400, 200);
+                ImageIcon icon = parent.loadAndScaleImage("/" + pulledItem.getName() + ".jpg", 400, 200);
                 if (icon != null) {
                     imageLabel.setIcon(icon);
                 } else {

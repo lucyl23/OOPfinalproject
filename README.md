@@ -9,3 +9,4 @@
 https://lucyl23.github.io/OOPfinalproject/<br>
 ## 如何執行<br>
 ## 物件導向概念使用<br>
+詳見報告 https://canva.link/s16uv11256exh17 <br>
